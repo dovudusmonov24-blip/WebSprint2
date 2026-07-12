@@ -1,0 +1,4517 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="Профессиональная разработка сайтов и мобильных приложений любой сложности">
+  <meta name="theme-color" content="#0a0e27">
+  <!-- Open Graph — красивое превью при отправке ссылки -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="WebSprint — Разработка сайтов и приложений">
+  <meta property="og:description" content="Создание сайтов и мобильных приложений для iOS и Android. От идеи до запуска.">
+  <meta property="og:image" content="logo.png">
+  <meta property="og:locale" content="ru_RU">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="WebSprint — Разработка сайтов и приложений">
+  <meta name="twitter:description" content="Создание сайтов и мобильных приложений для iOS и Android. От идеи до запуска.">
+  <meta name="twitter:image" content="logo.png">
+  <link rel="sitemap" type="application/xml" href="sitemap.xml">
+  <link rel="icon" type="image/png" href="logo.png">
+  <link rel="apple-touch-icon" href="logo.png">
+  <title>WebSprint — Разработка сайтов и мобильных приложений</title>
+
+  <!-- Предзагрузка критичных ресурсов -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome — асинхронная загрузка, не блокирует отрисовку -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"></noscript>
+
+  <style>
+    /* ===== CSS-переменные ===== */
+    :root {
+      --bg-primary: #0a0e27;
+      --bg-secondary: #111638;
+      --bg-card: rgba(255, 255, 255, 0.04);
+      --bg-card-hover: rgba(255, 255, 255, 0.08);
+      --text-primary: #ffffff;
+      --text-secondary: rgba(255, 255, 255, 0.7);
+      --text-muted: rgba(255, 255, 255, 0.45);
+      --accent-start: #2563eb;
+      --accent-end: #06b6d4;
+      --gradient: linear-gradient(135deg, var(--accent-start), var(--accent-end));
+      --shadow-sm: 0 4px 20px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 8px 40px rgba(0, 0, 0, 0.4);
+      --shadow-lg: 0 16px 60px rgba(0, 0, 0, 0.5);
+      --shadow-glow: 0 0 40px rgba(37, 99, 235, 0.35);
+      --radius-sm: 12px;
+      --radius-md: 20px;
+      --radius-lg: 30px;
+      --transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      --header-height: 80px;
+      --section-py: 64px;
+      --section-gap: 32px;
+    }
+
+    /* Светлая тема (опциональная) */
+    [data-theme="light"] {
+      --bg-primary: #f0f2f8;
+      --bg-secondary: #e4e8f2;
+      --bg-card: rgba(255, 255, 255, 0.85);
+      --bg-card-hover: rgba(255, 255, 255, 1);
+      --text-primary: #0a0e27;
+      --text-secondary: rgba(10, 14, 39, 0.75);
+      --text-muted: rgba(10, 14, 39, 0.5);
+      --shadow-sm: 0 4px 20px rgba(10, 14, 39, 0.08);
+      --shadow-md: 0 8px 40px rgba(10, 14, 39, 0.12);
+      --shadow-lg: 0 16px 60px rgba(10, 14, 39, 0.16);
+    }
+
+    /* ===== Сброс и базовые стили ===== */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: var(--header-height);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+      text-rendering: optimizeSpeed;
+      -webkit-font-smoothing: antialiased;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Изоляция перерисовки карточек */
+    .service-card,
+    .review-card,
+    .contacts__form,
+    .reviews__form-wrapper {
+      contain: layout style paint;
+    }
+
+    /* GPU-слой для тяжёлых анимаций */
+    .hero__bg-gradient,
+    .hero__blob,
+    .particle {
+      transform: translateZ(0);
+      backface-visibility: hidden;
+    }
+
+    /* Пауза анимаций при скрытой вкладке */
+    body.is-tab-hidden .hero__bg-gradient,
+    body.is-tab-hidden .hero__blob,
+    body.is-tab-hidden .particle,
+    body.is-tab-hidden .preloader__spinner {
+      animation-play-state: paused;
+    }
+
+    /* Снижение нагрузки на слабых устройствах и мобильных */
+    @media (max-width: 768px), (prefers-reduced-motion: reduce) {
+      .hero__blob {
+        filter: blur(40px);
+        opacity: 0.25;
+      }
+
+      .hero__bg-gradient {
+        animation: none;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      .reveal {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
+
+      .particle {
+        display: none;
+      }
+
+      .btn--primary:hover {
+        animation: none;
+      }
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    /* ===== Прелоадер ===== */
+    .preloader {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-primary);
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
+
+    .preloader--hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .preloader__spinner {
+      width: 56px;
+      height: 56px;
+      border: 3px solid rgba(124, 58, 237, 0.2);
+      border-top-color: var(--accent-start);
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+    }
+
+    .preloader__logo {
+      position: absolute;
+      margin-bottom: 80px;
+    }
+
+    .preloader__logo img {
+      width: 96px;
+      height: 96px;
+      object-fit: contain;
+      filter: drop-shadow(0 0 24px rgba(124, 58, 237, 0.4));
+      animation: logo-pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes logo-pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.05); opacity: 0.9; }
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ===== Утилиты ===== */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding-left: max(24px, env(safe-area-inset-left, 0px));
+      padding-right: max(24px, env(safe-area-inset-right, 0px));
+    }
+
+    .hero .hero__content.container {
+      max-width: 1400px;
+    }
+
+    .section {
+      padding: var(--section-py) 0;
+      position: relative;
+      content-visibility: auto;
+      contain-intrinsic-size: auto 480px;
+    }
+
+    .section__title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .section__subtitle {
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+      max-width: 600px;
+      margin: 0 auto var(--section-gap);
+    }
+
+    .section__title--gradient {
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Диагональный разделитель секций */
+    .section-divider {
+      position: absolute;
+      top: -1px;
+      left: 0;
+      width: 100%;
+      height: 48px;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .section-divider svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .section-divider--flip {
+      top: auto;
+      bottom: -1px;
+      transform: rotate(180deg);
+    }
+
+    /* Анимация появления при скролле */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .reveal--visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal--delay-1 { transition-delay: 0.1s; }
+    .reveal--delay-2 { transition-delay: 0.2s; }
+    .reveal--delay-3 { transition-delay: 0.3s; }
+    .reveal--delay-4 { transition-delay: 0.4s; }
+    .reveal--delay-5 { transition-delay: 0.5s; }
+
+    /* ===== Кнопки ===== */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 32px;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn--primary {
+      background: var(--gradient);
+      color: #fff;
+      box-shadow: var(--shadow-glow);
+    }
+
+    .btn--primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 60px rgba(124, 58, 237, 0.5);
+      animation: pulse-glow 1.5s ease infinite;
+    }
+
+    .btn--outline {
+      background: transparent;
+      color: var(--text-primary);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+    }
+
+    .btn--outline:hover {
+      border-color: var(--accent-start);
+      background: rgba(124, 58, 237, 0.1);
+      transform: translateY(-2px);
+    }
+
+    [data-theme="light"] .btn--outline {
+      border-color: rgba(10, 14, 39, 0.2);
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 30px rgba(124, 58, 237, 0.4); }
+      50% { box-shadow: 0 0 50px rgba(37, 99, 235, 0.6); }
+    }
+
+    /* ===== Шапка ===== */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: var(--header-height);
+      z-index: 1000;
+      transition: var(--transition);
+    }
+
+    .header--scrolled {
+      background: rgba(10, 14, 39, 0.85);
+      backdrop-filter: blur(20px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    [data-theme="light"] .header--scrolled {
+      background: rgba(240, 242, 248, 0.9);
+    }
+
+    .header__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 100%;
+    }
+
+    .header__logo {
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .header__logo img {
+      height: 44px;
+      width: auto;
+      object-fit: contain;
+      transition: var(--transition);
+    }
+
+    .header__logo:hover img {
+      transform: scale(1.05);
+      filter: drop-shadow(0 0 12px rgba(124, 58, 237, 0.45));
+    }
+
+    .nav__list {
+      display: flex;
+      gap: 36px;
+    }
+
+    .nav__link {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      transition: var(--transition);
+      position: relative;
+    }
+
+    .nav__link::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--gradient);
+      transition: width var(--transition);
+    }
+
+    .nav__link:hover {
+      color: var(--text-primary);
+    }
+
+    .nav__link:hover::after {
+      width: 100%;
+    }
+
+    .header__actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .theme-toggle {
+      width: 44px;
+      height: 44px;
+      border: none;
+      border-radius: 50%;
+      background: var(--bg-card);
+      color: var(--text-primary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      transition: var(--transition);
+      backdrop-filter: blur(10px);
+    }
+
+    .theme-toggle:hover {
+      background: var(--bg-card-hover);
+      transform: rotate(20deg);
+    }
+
+    /* Гамбургер-меню */
+    .burger {
+      display: none;
+      flex-direction: column;
+      gap: 6px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      z-index: 1001;
+    }
+
+    .burger__line {
+      width: 28px;
+      height: 2px;
+      background: var(--text-primary);
+      border-radius: 2px;
+      transition: var(--transition);
+    }
+
+    .burger--active .burger__line:nth-child(1) {
+      transform: rotate(45deg) translate(6px, 6px);
+    }
+
+    .burger--active .burger__line:nth-child(2) {
+      opacity: 0;
+      transform: translateX(-10px);
+    }
+
+    .burger--active .burger__line:nth-child(3) {
+      transform: rotate(-45deg) translate(6px, -6px);
+    }
+
+    /* ===== Герой-блок ===== */
+    .hero {
+      min-height: auto;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      padding: calc(var(--header-height) + 32px) 0 48px;
+    }
+
+    /* Анимированный градиентный фон */
+    .hero__bg {
+      position: absolute;
+      inset: 0;
+      background: var(--bg-primary);
+      z-index: 0;
+    }
+
+    .hero__bg-gradient {
+      position: absolute;
+      inset: -50%;
+      background: conic-gradient(
+        from 0deg at 50% 50%,
+        #7c3aed 0deg,
+        #2563eb 120deg,
+        #0a0e27 240deg,
+        #7c3aed 360deg
+      );
+      animation: rotate-gradient 20s linear infinite;
+      opacity: 0.15;
+    }
+
+    @keyframes rotate-gradient {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Размытые фоновые элементы */
+    .hero__blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.4;
+      animation: float-blob 8s ease-in-out infinite;
+    }
+
+    .hero__blob--1 {
+      width: 500px;
+      height: 500px;
+      background: var(--accent-start);
+      top: -10%;
+      right: -10%;
+      animation-delay: 0s;
+    }
+
+    .hero__blob--2 {
+      width: 400px;
+      height: 400px;
+      background: var(--accent-end);
+      bottom: -5%;
+      left: -5%;
+      animation-delay: -4s;
+    }
+
+    @keyframes float-blob {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(30px, -30px) scale(1.05); }
+      66% { transform: translate(-20px, 20px) scale(0.95); }
+    }
+
+    /* CSS-частицы */
+    .hero__particles {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .particle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      animation: particle-float linear infinite;
+    }
+
+    @keyframes particle-float {
+      0% {
+        transform: translateY(100vh) scale(0);
+        opacity: 0;
+      }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% {
+        transform: translateY(-100px) scale(1);
+        opacity: 0;
+      }
+    }
+
+    .hero__content {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: none;
+    }
+
+    .hero__badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 20px;
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 50px;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+      backdrop-filter: blur(10px);
+    }
+
+    .hero__badge-dot {
+      width: 8px;
+      height: 8px;
+      background: #22c55e;
+      border-radius: 50%;
+      animation: blink 2s ease infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .hero__title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.5rem, 5.5vw, 4.75rem);
+      font-weight: 700;
+      line-height: 1.12;
+      margin-bottom: 16px;
+    }
+
+    .hero__title-accent {
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero__text {
+      font-size: 1.15rem;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+      max-width: none;
+      line-height: 1.7;
+    }
+
+    .hero__buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .hero__highlights {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .hero__highlight {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      padding: 16px;
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-sm);
+      backdrop-filter: blur(10px);
+      transition: var(--transition);
+    }
+
+    .hero__highlight:hover {
+      background: var(--bg-card-hover);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .hero__highlight-icon {
+      width: 44px;
+      height: 44px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--gradient);
+      border-radius: var(--radius-sm);
+      font-size: 1.1rem;
+      color: #fff;
+    }
+
+    .hero__highlight-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 4px;
+    }
+
+    .hero__highlight-text {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* ===== Услуги ===== */
+    .services {
+      background: var(--bg-secondary);
+    }
+
+    .services__grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .service-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-md);
+      padding: 28px 24px;
+      backdrop-filter: blur(20px);
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .service-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--gradient);
+      transform: scaleX(0);
+      transition: transform var(--transition);
+    }
+
+    .service-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: var(--shadow-lg), var(--shadow-glow);
+      background: var(--bg-card-hover);
+    }
+
+    .service-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .service-card__icon {
+      width: 64px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--gradient);
+      border-radius: var(--radius-sm);
+      font-size: 1.6rem;
+      color: #fff;
+      margin-bottom: 24px;
+      transition: var(--transition);
+    }
+
+    .service-card:hover .service-card__icon {
+      transform: scale(1.1) rotate(-5deg);
+    }
+
+    .service-card__title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .service-card__text {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      margin-bottom: 20px;
+    }
+
+    .service-card__list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .service-card__list li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .service-card__list li i {
+      color: var(--accent-start);
+      font-size: 0.75rem;
+    }
+
+    /* ===== Отзывы ===== */
+    .reviews {
+      background: var(--bg-secondary);
+    }
+
+    .reviews__form-wrapper {
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      backdrop-filter: blur(20px);
+      margin-bottom: 32px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .reviews__form-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      margin-bottom: 24px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: 8px;
+      color: var(--text-secondary);
+    }
+
+    .form-input,
+    .form-textarea {
+      width: 100%;
+      padding: 14px 18px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      transition: var(--transition);
+    }
+
+    [data-theme="light"] .form-input,
+    [data-theme="light"] .form-textarea {
+      background: rgba(10, 14, 39, 0.03);
+      border-color: rgba(10, 14, 39, 0.1);
+    }
+
+    .form-input:focus,
+    .form-textarea:focus {
+      outline: none;
+      border-color: var(--accent-start);
+      box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2);
+    }
+
+    .form-input--error {
+      border-color: #ef4444 !important;
+    }
+
+    .form-error {
+      color: #ef4444;
+      font-size: 0.8rem;
+      margin-top: 6px;
+      display: none;
+    }
+
+    .form-error--visible {
+      display: block;
+    }
+
+    .form-textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    /* Звёзды рейтинга */
+    .star-rating {
+      display: flex;
+      gap: 8px;
+    }
+
+    .star-rating__star {
+      font-size: 1.8rem;
+      color: rgba(255, 255, 255, 0.2);
+      cursor: pointer;
+      transition: var(--transition);
+      background: none;
+      border: none;
+      padding: 0;
+    }
+
+    .star-rating__star--active,
+    .star-rating__star:hover {
+      color: #fbbf24;
+      transform: scale(1.15);
+    }
+
+    .star-rating__star--hover-preview {
+      color: #fbbf24;
+    }
+
+    .star-rating--readonly .star-rating__star {
+      cursor: default;
+      font-size: 1rem;
+    }
+
+    .star-rating--readonly .star-rating__star:hover {
+      transform: none;
+    }
+
+    /* Карточки отзывов */
+    .reviews__list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+      gap: 18px;
+    }
+
+    .review-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-md);
+      padding: 22px;
+      backdrop-filter: blur(20px);
+      position: relative;
+      transition: var(--transition);
+    }
+
+    .review-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-4px);
+    }
+
+    .review-card--new {
+      animation: review-appear 0.6s ease forwards;
+    }
+
+    @keyframes review-appear {
+      from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .review-card__delete {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 32px;
+      height: 32px;
+      border: none;
+      border-radius: 50%;
+      background: rgba(239, 68, 68, 0.1);
+      color: #ef4444;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      transition: var(--transition);
+      opacity: 0;
+    }
+
+    .review-card:hover .review-card__delete {
+      opacity: 1;
+    }
+
+    .review-card__delete:hover {
+      background: #ef4444;
+      color: #fff;
+    }
+
+    .review-card__header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .review-card__avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1rem;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .review-card__name {
+      font-weight: 600;
+      font-size: 1rem;
+    }
+
+    .review-card__date {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .review-card__rating {
+      margin-bottom: 12px;
+    }
+
+    .review-card__text {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.7;
+    }
+
+    .reviews__empty {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+    }
+
+    .reviews__empty i {
+      font-size: 3rem;
+      margin-bottom: 16px;
+      opacity: 0.3;
+    }
+
+    .reviews__load-more {
+      display: block;
+      margin: 24px auto 0;
+    }
+
+    /* Средний балл отзывов */
+    .reviews__summary {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      max-width: 420px;
+      margin: 0 auto 28px;
+      padding: 20px 24px;
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-md);
+      backdrop-filter: blur(20px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .reviews__summary[hidden] {
+      display: none !important;
+    }
+
+    .reviews__summary-score {
+      font-family: 'Playfair Display', serif;
+      font-size: 3.5rem;
+      font-weight: 700;
+      line-height: 1;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .reviews__summary-info {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .reviews__summary-stars .star-rating__star {
+      font-size: 1.15rem;
+    }
+
+    .reviews__summary-count {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    /* ===== Обо мне ===== */
+    .about {
+      background: var(--bg-secondary);
+    }
+
+    .about__grid {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .about__avatar {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      padding: 6px;
+      background: var(--gradient);
+      box-shadow: var(--shadow-glow);
+      flex-shrink: 0;
+    }
+
+    .about__avatar img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      background: var(--bg-primary);
+    }
+
+    .about__name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .about__role {
+      color: var(--accent-start);
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 16px;
+    }
+
+    .about__text {
+      color: var(--text-secondary);
+      line-height: 1.7;
+      margin-bottom: 18px;
+    }
+
+    .about__tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .about__tag {
+      padding: 6px 14px;
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 50px;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    /* ===== Как я работаю ===== */
+    .process__steps {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 20px;
+      position: relative;
+    }
+
+    .process__steps::before {
+      content: '';
+      position: absolute;
+      top: 36px;
+      left: 10%;
+      right: 10%;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent-start), var(--accent-end));
+      opacity: 0.3;
+      z-index: 0;
+    }
+
+    .process-step {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .process-step__number {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--gradient);
+      border-radius: 50%;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #fff;
+      box-shadow: var(--shadow-glow);
+      transition: var(--transition);
+    }
+
+    .process-step:hover .process-step__number {
+      transform: scale(1.1);
+    }
+
+    .process-step__title {
+      font-weight: 600;
+      font-size: 1rem;
+      margin-bottom: 8px;
+    }
+
+    .process-step__text {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* ===== Технологии ===== */
+    .tech {
+      background: var(--bg-secondary);
+    }
+
+    .tech__grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .tech__item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 18px;
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-sm);
+      backdrop-filter: blur(10px);
+      transition: var(--transition);
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+
+    .tech__item:hover {
+      background: var(--bg-card-hover);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-sm);
+      border-color: rgba(124, 58, 237, 0.3);
+    }
+
+    .tech__item i {
+      font-size: 1.4rem;
+      color: var(--accent-start);
+    }
+
+    /* ===== FAQ ===== */
+    .faq__list {
+      max-width: 800px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .faq-item {
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+      transition: var(--transition);
+    }
+
+    .faq-item--open {
+      border-color: rgba(124, 58, 237, 0.3);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .faq-item__question {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 16px 20px;
+      background: none;
+      border: none;
+      color: var(--text-primary);
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      text-align: left;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .faq-item__question:hover {
+      color: var(--accent-start);
+    }
+
+    .faq-item__icon {
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--gradient);
+      border-radius: 50%;
+      color: #fff;
+      font-size: 0.85rem;
+      transition: transform var(--transition);
+    }
+
+    .faq-item--open .faq-item__icon {
+      transform: rotate(45deg);
+    }
+
+    .faq-item__answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, padding 0.4s ease;
+    }
+
+    .faq-item--open .faq-item__answer {
+      max-height: 300px;
+    }
+
+    .faq-item__answer-inner {
+      padding: 0 24px 20px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      font-size: 0.95rem;
+    }
+
+    /* ===== CTA-баннер ===== */
+    .cta-banner {
+      padding: 0;
+    }
+
+    .cta-banner__inner {
+      background: var(--gradient);
+      border-radius: var(--radius-lg);
+      padding: 32px 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      box-shadow: var(--shadow-glow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-banner__inner::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 80% 50%, rgba(255,255,255,0.15) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .cta-banner__content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .cta-banner__title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .cta-banner__text {
+      font-size: 1.05rem;
+      opacity: 0.9;
+    }
+
+    .cta-banner__btn {
+      position: relative;
+      z-index: 1;
+      flex-shrink: 0;
+      background: #fff;
+      color: var(--accent-start);
+      box-shadow: var(--shadow-md);
+    }
+
+    .cta-banner__btn:hover {
+      background: #f8f8ff;
+      transform: translateY(-2px);
+      animation: none;
+      box-shadow: var(--shadow-lg);
+    }
+
+    /* ===== Эффект печати в герое ===== */
+    .hero__typed {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      margin-bottom: 14px;
+      min-height: 1.4em;
+    }
+
+    .hero__typed-label {
+      color: var(--text-muted);
+    }
+
+    #heroTyped {
+      color: var(--accent-end);
+      font-weight: 600;
+    }
+
+    .hero__cursor {
+      display: inline-block;
+      color: var(--accent-start);
+      animation: blink-cursor 1s step-end infinite;
+      margin-left: 2px;
+    }
+
+    @keyframes blink-cursor {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    /* ===== Калькулятор стоимости ===== */
+    .calculator {
+      background: var(--bg-secondary);
+    }
+
+    .calc__layout {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .calc__options {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .calc__option {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 16px;
+      background: var(--bg-card);
+      border: 2px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: var(--transition);
+      text-align: left;
+      color: var(--text-primary);
+      font-family: inherit;
+    }
+
+    .calc__option:hover {
+      border-color: rgba(37, 99, 235, 0.4);
+      background: var(--bg-card-hover);
+      transform: translateY(-2px);
+    }
+
+    .calc__option--active {
+      border-color: var(--accent-start);
+      background: rgba(37, 99, 235, 0.1);
+      box-shadow: var(--shadow-glow);
+    }
+
+    .calc__option-icon {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--gradient);
+      border-radius: var(--radius-sm);
+      color: #fff;
+      font-size: 1.1rem;
+    }
+
+    .calc__option-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .calc__option-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .calc__result {
+      position: sticky;
+      top: calc(var(--header-height) + 16px);
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-md);
+      padding: 22px;
+      backdrop-filter: blur(20px);
+      box-shadow: var(--shadow-md);
+      text-align: center;
+    }
+
+    .calc__result-label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .calc__result-type {
+      font-weight: 600;
+      margin-bottom: 20px;
+      font-size: 1.05rem;
+    }
+
+    .calc__result-price {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem;
+      font-weight: 700;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+    }
+
+    .calc__result-time {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      margin-bottom: 24px;
+    }
+
+    .calc__result-note {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 16px;
+      line-height: 1.5;
+    }
+
+    .calc__result .btn {
+      width: 100%;
+      justify-content: center;
+    }
+
+    /* ===== GitHub-проекты ===== */
+    .github__header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .github__profile {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 20px;
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-sm);
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    .github__profile:hover {
+      background: var(--bg-card-hover);
+      color: var(--text-primary);
+      transform: translateY(-2px);
+    }
+
+    .github__profile i { font-size: 1.4rem; }
+
+    .github__grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .github-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      text-decoration: none;
+      color: inherit;
+      min-height: 160px;
+    }
+
+    .github-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-md);
+      border-color: rgba(37, 99, 235, 0.3);
+    }
+
+    .github-card__name {
+      font-weight: 600;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--accent-end);
+    }
+
+    .github-card__desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      flex: 1;
+    }
+
+    .github-card__meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .github-card__lang {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .github-card__lang-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent-start);
+    }
+
+    .github__loading,
+    .github__error {
+      text-align: center;
+      padding: 48px 20px;
+      color: var(--text-muted);
+      grid-column: 1 / -1;
+    }
+
+    .github__loading i {
+      font-size: 2rem;
+      animation: spin 1s linear infinite;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    /* ===== Аватар с инициалами ===== */
+    .about__avatar {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .about__initials {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-primary);
+      font-family: 'Playfair Display', serif;
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.25), rgba(6, 182, 212, 0.25));
+      color: var(--text-primary);
+    }
+
+    .about__avatar--photo .about__initials {
+      display: none;
+    }
+
+    /* ===== Пример работы ===== */
+    .showcase {
+      margin-top: 28px;
+      padding: 20px 24px;
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-md);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .showcase__badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      background: rgba(37, 99, 235, 0.15);
+      border-radius: 50px;
+      font-size: 0.8rem;
+      color: var(--accent-start);
+      margin-bottom: 12px;
+    }
+
+    .showcase__title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.35rem;
+      margin-bottom: 8px;
+    }
+
+    .showcase__text {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+
+    .showcase__tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .showcase__tag {
+      padding: 4px 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 50px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .showcase__preview {
+      width: 180px;
+      height: 120px;
+      border-radius: var(--radius-sm);
+      background: var(--gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      color: #fff;
+      box-shadow: var(--shadow-glow);
+      flex-shrink: 0;
+    }
+
+    /* ===== Гарантии ===== */
+    .guarantees {
+      background: var(--bg-secondary);
+    }
+
+    .guarantees__grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .guarantee-card {
+      padding: 24px 20px;
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-md);
+      transition: var(--transition);
+    }
+
+    .guarantee-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(37, 99, 235, 0.3);
+      box-shadow: var(--shadow-md);
+    }
+
+    .guarantee-card__icon {
+      width: 56px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--gradient);
+      border-radius: var(--radius-sm);
+      font-size: 1.4rem;
+      color: #fff;
+      margin-bottom: 14px;
+    }
+
+    .guarantee-card__title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .guarantee-card__text {
+      color: var(--text-secondary);
+      font-size: 0.92rem;
+      line-height: 1.7;
+    }
+
+    /* ===== Пакеты услуг ===== */
+    .packages__grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .package-card {
+      position: relative;
+      padding: 28px 22px;
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-md);
+      display: flex;
+      flex-direction: column;
+      transition: var(--transition);
+    }
+
+    .package-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .package-card--popular {
+      border-color: rgba(37, 99, 235, 0.45);
+      box-shadow: var(--shadow-glow);
+    }
+
+    .package-card__badge {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 4px 16px;
+      background: var(--gradient);
+      border-radius: 50px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #fff;
+      white-space: nowrap;
+    }
+
+    .package-card__name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      margin-bottom: 8px;
+    }
+
+    .package-card__price {
+      font-size: 1.75rem;
+      font-weight: 700;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 4px;
+    }
+
+    .package-card__time {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-bottom: 20px;
+    }
+
+    .package-card__desc {
+      color: var(--text-secondary);
+      font-size: 0.92rem;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .package-card__list {
+      list-style: none;
+      margin-bottom: 20px;
+      flex-grow: 1;
+    }
+
+    .package-card__list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+    }
+
+    .package-card__list li i {
+      color: var(--accent-start);
+      margin-top: 4px;
+      flex-shrink: 0;
+    }
+
+    .package-card .btn {
+      width: 100%;
+      justify-content: center;
+    }
+
+    /* ===== Квиз ===== */
+    .quiz {
+      background: var(--bg-secondary);
+    }
+
+    .quiz__card {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 28px 24px;
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-md);
+    }
+
+    .quiz__progress {
+      height: 4px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 4px;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+
+    .quiz__progress-bar {
+      height: 100%;
+      background: var(--gradient);
+      border-radius: 4px;
+      transition: width 0.4s ease;
+      width: 25%;
+    }
+
+    .quiz__step {
+      display: none;
+    }
+
+    .quiz__step--active {
+      display: block;
+    }
+
+    .quiz__question {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      margin-bottom: 18px;
+      text-align: center;
+    }
+
+    .quiz__options {
+      display: grid;
+      gap: 12px;
+    }
+
+    .quiz__option {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 20px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: var(--transition);
+      text-align: left;
+    }
+
+    .quiz__option:hover {
+      border-color: rgba(37, 99, 235, 0.4);
+      background: rgba(37, 99, 235, 0.08);
+    }
+
+    .quiz__option--selected {
+      border-color: var(--accent-start);
+      background: rgba(37, 99, 235, 0.12);
+    }
+
+    .quiz__option-icon {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--gradient);
+      border-radius: 10px;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .quiz__nav {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .quiz__result {
+      display: none;
+      text-align: center;
+    }
+
+    .quiz__result--visible {
+      display: block;
+    }
+
+    .quiz__result-icon {
+      width: 72px;
+      height: 72px;
+      margin: 0 auto 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--gradient);
+      border-radius: 50%;
+      font-size: 1.8rem;
+      color: #fff;
+    }
+
+    .quiz__result-type {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      margin-bottom: 8px;
+    }
+
+    .quiz__result-price {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--accent-start);
+      margin-bottom: 8px;
+    }
+
+    .quiz__result-text {
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+      line-height: 1.7;
+    }
+
+    .quiz__result-notice {
+      font-size: 0.88rem;
+      color: var(--accent-start);
+      margin: -12px 0 20px;
+      padding: 10px 16px;
+      background: rgba(37, 99, 235, 0.1);
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(37, 99, 235, 0.2);
+    }
+
+    .quiz__result-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    /* ===== Чекбокс и ссылки в форме ===== */
+    .form-group--checkbox {
+      margin-bottom: 16px;
+    }
+
+    .form-checkbox {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .form-checkbox input {
+      margin-top: 3px;
+      accent-color: var(--accent-start);
+      flex-shrink: 0;
+    }
+
+    .form-link {
+      background: none;
+      border: none;
+      padding: 0;
+      color: var(--accent-start);
+      font: inherit;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    .form-link:hover {
+      color: var(--accent-end);
+    }
+
+    /* ===== Модальное окно ===== */
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(6px);
+      opacity: 0;
+      visibility: hidden;
+      transition: var(--transition);
+    }
+
+    .modal--open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal__dialog {
+      width: 100%;
+      max-width: 560px;
+      max-height: min(85vh, 640px);
+      overflow-y: auto;
+      background: var(--bg-secondary);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-md);
+      padding: 32px 28px;
+      transform: translateY(20px);
+      transition: var(--transition);
+    }
+
+    .modal--open .modal__dialog {
+      transform: translateY(0);
+    }
+
+    .modal__title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      margin-bottom: 16px;
+    }
+
+    .modal__text {
+      color: var(--text-secondary);
+      font-size: 0.92rem;
+      line-height: 1.75;
+      margin-bottom: 12px;
+    }
+
+    .modal__close {
+      margin-top: 24px;
+      width: 100%;
+      justify-content: center;
+    }
+
+    .footer__links {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .footer__link {
+      background: none;
+      border: none;
+      padding: 0;
+      color: var(--text-muted);
+      font: inherit;
+      font-size: 0.85rem;
+      cursor: pointer;
+      text-decoration: underline;
+      transition: var(--transition);
+    }
+
+    .footer__link:hover {
+      color: var(--accent-start);
+    }
+
+    /* ===== Плавающая кнопка Telegram ===== */
+    .tg-float {
+      position: fixed;
+      bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+      left: calc(24px + env(safe-area-inset-left, 0px));
+      width: 56px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #0088cc, #00a2e8);
+      color: #fff;
+      border-radius: 50%;
+      font-size: 1.6rem;
+      z-index: 998;
+      box-shadow: 0 4px 24px rgba(0, 136, 204, 0.45);
+      transition: var(--transition);
+      text-decoration: none;
+    }
+
+    .tg-float:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 32px rgba(0, 136, 204, 0.6);
+    }
+
+    .tg-float__tooltip {
+      position: absolute;
+      left: calc(100% + 12px);
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      font-weight: 500;
+      white-space: nowrap;
+      opacity: 0;
+      visibility: hidden;
+      transition: var(--transition);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      pointer-events: none;
+    }
+
+    .tg-float:hover .tg-float__tooltip {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* ===== Контакты ===== */
+    .contacts__grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 32px;
+      align-items: start;
+    }
+
+    .contacts__info-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      margin-bottom: 16px;
+    }
+
+    .contacts__info-text {
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+      line-height: 1.7;
+    }
+
+    .contacts__items {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .contacts__item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 20px;
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-sm);
+      transition: var(--transition);
+    }
+
+    .contacts__item:hover {
+      background: var(--bg-card-hover);
+      transform: translateX(8px);
+    }
+
+    .contacts__item-icon {
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--gradient);
+      border-radius: var(--radius-sm);
+      font-size: 1.2rem;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .contacts__item-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .contacts__item-value {
+      font-weight: 500;
+      word-break: break-word;
+    }
+
+    .contacts__form {
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      backdrop-filter: blur(20px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .contacts__form-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.35rem;
+      margin-bottom: 18px;
+    }
+
+    .form-success {
+      display: none;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 20px;
+      background: rgba(34, 197, 94, 0.1);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      border-radius: var(--radius-sm);
+      color: #22c55e;
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
+
+    .form-success--visible {
+      display: flex;
+    }
+
+    /* ===== Футер ===== */
+    .footer {
+      padding: 28px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .footer__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .footer__copy {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .footer__socials {
+      display: flex;
+      gap: 12px;
+    }
+
+    .footer__social-link {
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: var(--bg-card);
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+      transition: var(--transition);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .footer__social-link:hover {
+      background: var(--gradient);
+      color: #fff;
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-glow);
+    }
+
+    /* ===== Кнопка «Наверх» ===== */
+    .scroll-top {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 50px;
+      height: 50px;
+      border: none;
+      border-radius: 50%;
+      background: var(--gradient);
+      color: #fff;
+      font-size: 1.2rem;
+      cursor: pointer;
+      z-index: 999;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(20px);
+      transition: var(--transition);
+      box-shadow: var(--shadow-glow);
+    }
+
+    .scroll-top--visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .scroll-top:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 0 50px rgba(124, 58, 237, 0.5);
+    }
+
+    /* ===== Адаптивность ===== */
+    @media (max-width: 1024px) {
+      .services__grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .contacts__grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero__highlights {
+        grid-template-columns: 1fr;
+      }
+
+      .about__grid {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 32px;
+      }
+
+      .about__avatar {
+        margin: 0 auto;
+      }
+
+      .about__tags {
+        justify-content: center;
+      }
+
+      .process__steps {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .process__steps::before {
+        display: none;
+      }
+
+      .guarantees__grid,
+      .packages__grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .package-card--popular {
+        grid-column: span 2;
+      }
+    }
+
+    @media (max-width: 768px) {
+      :root {
+        --header-height: 64px;
+        --section-py: 44px;
+        --section-gap: 24px;
+        --radius-md: 16px;
+        --radius-lg: 24px;
+      }
+
+      .section__subtitle {
+        font-size: 1rem;
+        margin-bottom: var(--section-gap);
+        padding: 0 4px;
+      }
+
+      .section-divider {
+        height: 32px;
+      }
+
+      .container {
+        padding-left: max(16px, env(safe-area-inset-left, 0px));
+        padding-right: max(16px, env(safe-area-inset-right, 0px));
+      }
+
+      /* Шапка */
+      .header__logo img {
+        height: 38px;
+      }
+
+      .theme-toggle,
+      .burger {
+        min-width: 44px;
+        min-height: 44px;
+      }
+
+      .nav {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: min(85%, 320px);
+        height: 100vh;
+        height: 100dvh;
+        background: rgba(10, 14, 39, 0.98);
+        backdrop-filter: blur(20px);
+        padding: calc(var(--header-height) + 32px) 32px 40px;
+        padding-bottom: max(40px, env(safe-area-inset-bottom, 0px));
+        transition: right var(--transition);
+        z-index: 999;
+        box-shadow: var(--shadow-lg);
+      }
+
+      [data-theme="light"] .nav {
+        background: rgba(240, 242, 248, 0.98);
+      }
+
+      .nav--open {
+        right: 0;
+      }
+
+      .nav__list {
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .nav__link {
+        font-size: 1.15rem;
+        display: block;
+        padding: 8px 0;
+      }
+
+      .burger {
+        display: flex;
+      }
+
+      /* Герой */
+      .hero {
+        min-height: auto;
+        align-items: flex-start;
+        padding-top: calc(var(--header-height) + 16px);
+        padding-bottom: 36px;
+      }
+
+      .hero__blob--1 {
+        width: 260px;
+        height: 260px;
+        top: -5%;
+        right: -20%;
+      }
+
+      .hero__blob--2 {
+        width: 200px;
+        height: 200px;
+        bottom: 10%;
+        left: -15%;
+      }
+
+      .hero__badge {
+        font-size: 0.8rem;
+        padding: 8px 16px;
+        margin-bottom: 20px;
+      }
+
+      .hero__title {
+        font-size: clamp(1.85rem, 8.5vw, 2.75rem);
+        margin-bottom: 16px;
+      }
+
+      .hero__text {
+        font-size: 1rem;
+        margin-bottom: 28px;
+        line-height: 1.7;
+      }
+
+      .hero__buttons {
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .hero__buttons .btn {
+        width: 100%;
+        justify-content: center;
+        padding: 16px 24px;
+      }
+
+      .hero__highlights {
+        grid-template-columns: 1fr;
+        gap: 10px;
+        margin-top: 24px;
+        padding-top: 20px;
+      }
+
+      .hero__highlight {
+        padding: 16px;
+        gap: 14px;
+      }
+
+      .hero__highlight-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+      }
+
+      .hero__highlight-title {
+        font-size: 0.9rem;
+      }
+
+      .hero__highlight-text {
+        font-size: 0.82rem;
+      }
+
+      /* Услуги */
+      .services__grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .service-card {
+        padding: 28px 22px;
+      }
+
+      .service-card__title {
+        font-size: 1.25rem;
+      }
+
+      /* Обо мне, процесс, CTA */
+      .about__avatar {
+        width: 140px;
+        height: 140px;
+      }
+
+      .about__name {
+        font-size: 1.5rem;
+      }
+
+      .process__steps {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .process-step__number {
+        width: 60px;
+        height: 60px;
+        font-size: 1.25rem;
+      }
+
+      .tech__item {
+        padding: 12px 18px;
+        font-size: 0.9rem;
+      }
+
+      .faq-item__question {
+        padding: 16px 18px;
+        font-size: 0.95rem;
+      }
+
+      .faq-item__answer-inner {
+        padding: 0 18px 16px;
+        font-size: 0.9rem;
+      }
+
+      .cta-banner__inner {
+        flex-direction: column;
+        text-align: center;
+        padding: 32px 24px;
+      }
+
+      .cta-banner__btn {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .calc__layout {
+        grid-template-columns: 1fr;
+      }
+
+      .calc__options {
+        grid-template-columns: 1fr;
+      }
+
+      .calc__result {
+        position: static;
+      }
+
+      .github__grid {
+        grid-template-columns: 1fr;
+      }
+
+      .github__header {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .github__header .section__title,
+      .github__header .section__subtitle {
+        text-align: center !important;
+      }
+
+      .github__profile {
+        justify-content: center;
+      }
+
+      .showcase {
+        grid-template-columns: 1fr;
+        text-align: center;
+        padding: 24px 20px;
+      }
+
+      .showcase__preview {
+        margin: 0 auto;
+      }
+
+      .guarantees__grid,
+      .packages__grid {
+        grid-template-columns: 1fr;
+      }
+
+      .package-card--popular {
+        grid-column: span 1;
+      }
+
+      .quiz__card {
+        padding: 28px 20px;
+      }
+
+      .quiz__question {
+        font-size: 1.2rem;
+      }
+
+      .quiz__nav {
+        flex-direction: column;
+      }
+
+      .quiz__nav .btn {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .quiz__result-actions {
+        flex-direction: column;
+      }
+
+      .quiz__result-actions .btn {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .tg-float {
+        width: 50px;
+        height: 50px;
+        font-size: 1.4rem;
+        bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+        left: calc(16px + env(safe-area-inset-left, 0px));
+      }
+
+      .tg-float__tooltip {
+        display: none;
+      }
+
+      /* Отзывы */
+      .reviews__form-wrapper,
+      .contacts__form {
+        padding: 22px 18px;
+        border-radius: var(--radius-md);
+      }
+
+      .reviews__form-title,
+      .contacts__form-title {
+        font-size: 1.3rem;
+      }
+
+      .reviews__list {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      .review-card {
+        padding: 22px 18px;
+      }
+
+      .star-rating__star {
+        font-size: 2rem;
+        padding: 4px;
+      }
+
+      .form-input,
+      .form-textarea {
+        font-size: 16px; /* предотвращает зум на iOS */
+        padding: 12px 16px;
+      }
+
+      .reviews__form-wrapper .btn,
+      .contacts__form .btn,
+      .reviews__load-more {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .reviews__summary {
+        flex-direction: column;
+        text-align: center;
+        gap: 16px;
+        padding: 24px 20px;
+        margin-bottom: 32px;
+      }
+
+      .reviews__summary-score {
+        font-size: 3rem;
+      }
+
+      /* Контакты */
+      .contacts__info-title {
+        font-size: 1.5rem;
+      }
+
+      .contacts__item {
+        padding: 14px 16px;
+      }
+
+      .contacts__item-icon {
+        width: 44px;
+        height: 44px;
+        font-size: 1.1rem;
+      }
+
+      /* Футер */
+      .footer {
+        padding: 32px 0 max(32px, env(safe-area-inset-bottom, 0px));
+      }
+
+      .footer__inner {
+        flex-direction: column;
+        text-align: center;
+        gap: 16px;
+      }
+
+      .footer__copy {
+        font-size: 0.85rem;
+      }
+
+      /* Кнопка «Наверх» */
+      .scroll-top {
+        bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+        right: calc(16px + env(safe-area-inset-right, 0px));
+        width: 46px;
+        height: 46px;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .hero__title {
+        font-size: 1.75rem;
+      }
+
+      .section__title {
+        font-size: 1.75rem;
+      }
+
+      .btn {
+        font-size: 0.95rem;
+      }
+    }
+
+    /* Стили для сенсорных экранов */
+    @media (hover: none) and (pointer: coarse) {
+      .review-card__delete {
+        opacity: 1;
+      }
+
+      .service-card:active,
+      .review-card:active,
+      .hero__highlight:active {
+        transform: scale(0.98);
+      }
+
+      .contacts__item:hover {
+        transform: none;
+      }
+
+      .contacts__item:active {
+        background: var(--bg-card-hover);
+      }
+    }
+
+    /* Оверлей для мобильного меню */
+    .nav-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 998;
+      opacity: 0;
+      visibility: hidden;
+      transition: var(--transition);
+    }
+
+    .nav-overlay--visible {
+      opacity: 1;
+      visibility: visible;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Прелоадер -->
+  <div class="preloader" id="preloader">
+    <div class="preloader__logo">
+      <img src="logo.png" alt="WebSprint" width="96" height="96">
+    </div>
+    <div class="preloader__spinner"></div>
+  </div>
+
+  <!-- Шапка -->
+  <header class="header" id="header">
+    <div class="container header__inner">
+      <a href="#" class="header__logo" aria-label="WebSprint — на главную">
+        <img src="logo.png" alt="WebSprint" width="44" height="44">
+      </a>
+
+      <nav class="nav" id="nav">
+        <ul class="nav__list">
+          <li><a href="#about" class="nav__link">Обо мне</a></li>
+          <li><a href="#services" class="nav__link">Услуги</a></li>
+          <li><a href="#calculator" class="nav__link">Расчёт</a></li>
+          <li><a href="#process" class="nav__link">Процесс</a></li>
+          <li><a href="#github" class="nav__link">GitHub</a></li>
+          <li><a href="#faq" class="nav__link">FAQ</a></li>
+          <li><a href="#reviews" class="nav__link">Отзывы</a></li>
+          <li><a href="#contacts" class="nav__link">Контакты</a></li>
+        </ul>
+      </nav>
+
+      <div class="header__actions">
+        <button class="theme-toggle" id="themeToggle" aria-label="Переключить тему">
+          <i class="fas fa-moon"></i>
+        </button>
+        <button class="burger" id="burger" aria-label="Открыть меню">
+          <span class="burger__line"></span>
+          <span class="burger__line"></span>
+          <span class="burger__line"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Оверлей мобильного меню -->
+  <div class="nav-overlay" id="navOverlay"></div>
+
+  <main>
+    <!-- Герой-блок -->
+    <section class="hero" id="hero">
+      <div class="hero__bg">
+        <div class="hero__bg-gradient"></div>
+        <div class="hero__blob hero__blob--1"></div>
+        <div class="hero__blob hero__blob--2"></div>
+      </div>
+      <div class="hero__particles" id="particles"></div>
+
+      <div class="container hero__content">
+        <div class="hero__badge reveal">
+          <span class="hero__badge-dot"></span>
+          <span id="siteHeroBadge">Открыт для новых проектов</span>
+        </div>
+        <h1 class="hero__title reveal reveal--delay-1">
+          <span id="siteHeroTitleBefore">Создаю </span><span class="hero__title-accent" id="siteHeroTitleAccent">цифровые продукты</span><span id="siteHeroTitleAfter">, которые работают на ваш бизнес</span>
+        </h1>
+        <p class="hero__text reveal reveal--delay-2" id="siteHeroText">
+          Разработка сайтов любой сложности и мобильных приложений для iOS и Android. 
+          От идеи до запуска — с вниманием к деталям и фокусом на результат.
+        </p>
+        <p class="hero__typed reveal reveal--delay-2">
+          <span class="hero__typed-label">Создаю: </span><span id="heroTyped">лендинги</span><span class="hero__cursor">|</span>
+        </p>
+        <div class="hero__buttons reveal reveal--delay-3">
+          <a href="#contacts" class="btn btn--primary">
+            <i class="fas fa-paper-plane"></i> Связаться
+          </a>
+          <a href="#quiz" class="btn btn--outline">
+            <i class="fas fa-wand-magic-sparkles"></i> Подобрать решение
+          </a>
+        </div>
+        <div class="hero__highlights reveal reveal--delay-4">
+          <div class="hero__highlight">
+            <div class="hero__highlight-icon"><i class="fas fa-handshake"></i></div>
+            <div>
+              <div class="hero__highlight-title">Персональный подход</div>
+              <div class="hero__highlight-text">Работаю напрямую с вами — без посредников и лишней бюрократии</div>
+            </div>
+          </div>
+          <div class="hero__highlight">
+            <div class="hero__highlight-icon"><i class="fas fa-code"></i></div>
+            <div>
+              <div class="hero__highlight-title">Современный стек</div>
+              <div class="hero__highlight-text">React, Flutter, Swift, Kotlin — актуальные технологии под ваш проект</div>
+            </div>
+          </div>
+          <div class="hero__highlight">
+            <div class="hero__highlight-icon"><i class="fas fa-rocket"></i></div>
+            <div>
+              <div class="hero__highlight-title">От идеи до запуска</div>
+              <div class="hero__highlight-text">Полный цикл: обсуждение, разработка, тестирование и публикация</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Обо мне -->
+    <section class="section about" id="about">
+      <div class="section-divider">
+        <svg viewBox="0 0 1440 80" preserveAspectRatio="none" fill="var(--bg-primary)">
+          <polygon points="0,80 1440,0 1440,80"/>
+        </svg>
+      </div>
+      <div class="container">
+        <h2 class="section__title reveal">Обо <span class="section__title--gradient">мне</span></h2>
+        <p class="section__subtitle reveal reveal--delay-1" id="siteAboutSubtitle">
+          Разработчик, который превращает идеи в работающие цифровые продукты
+        </p>
+        <div class="about__grid reveal reveal--delay-2">
+          <div class="about__avatar" id="siteAboutAvatar">
+            <img src="" alt="WebSprint" id="siteAboutPhoto" hidden>
+            <span class="about__initials" id="siteAboutInitials">WS</span>
+          </div>
+          <div>
+            <h3 class="about__name" id="siteAboutName">WebSprint</h3>
+            <p class="about__role" id="siteAboutRole">Full-stack & Mobile Developer</p>
+            <p class="about__text" id="siteAboutText">
+              Занимаюсь разработкой сайтов и мобильных приложений. Работаю напрямую с клиентом — 
+              от первого созвона до публикации проекта. Для меня важны качество кода, 
+              понятный интерфейс и результат, который приносит пользу вашему бизнесу.
+            </p>
+            <div class="about__tags" id="siteAboutTags">
+              <span class="about__tag">Веб-разработка</span>
+              <span class="about__tag">iOS & Android</span>
+              <span class="about__tag">UI/UX</span>
+              <span class="about__tag">Поддержка проектов</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="showcase reveal reveal--delay-3">
+          <div>
+            <div class="showcase__badge"><i class="fas fa-star"></i> Пример работы</div>
+            <h3 class="showcase__title">Этот сайт — моя работа</h3>
+            <p class="showcase__text">
+              Адаптивный дизайн, калькулятор стоимости, квиз подбора решения, форма заявок, 
+              отзывы и админ-панель для управления контентом — всё сделано с нуля.
+            </p>
+            <div class="showcase__tags">
+              <span class="showcase__tag">Адаптив</span>
+              <span class="showcase__tag">Анимации</span>
+              <span class="showcase__tag">Админка</span>
+              <span class="showcase__tag">SEO</span>
+            </div>
+          </div>
+          <div class="showcase__preview" aria-hidden="true">
+            <i class="fas fa-laptop-code"></i>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Услуги -->
+    <section class="section services" id="services">
+      <div class="container">
+        <h2 class="section__title reveal">Мои <span class="section__title--gradient">услуги</span></h2>
+        <p class="section__subtitle reveal reveal--delay-1">
+          Полный цикл разработки — от концепции и дизайна до запуска и поддержки
+        </p>
+
+        <div class="services__grid">
+          <article class="service-card reveal reveal--delay-1">
+            <div class="service-card__icon">
+              <i class="fas fa-laptop-code"></i>
+            </div>
+            <h3 class="service-card__title">Создание сайтов</h3>
+            <p class="service-card__text">
+              Разрабатываю сайты любой сложности: лендинги, интернет-магазины, 
+              корпоративные порталы и веб-приложения.
+            </p>
+            <ul class="service-card__list">
+              <li><i class="fas fa-check"></i> Адаптивный дизайн под все устройства</li>
+              <li><i class="fas fa-check"></i> SEO-оптимизация и высокая скорость</li>
+              <li><i class="fas fa-check"></i> CMS и админ-панели</li>
+              <li><i class="fas fa-check"></i> Интеграция с платёжными системами</li>
+            </ul>
+          </article>
+
+          <article class="service-card reveal reveal--delay-2">
+            <div class="service-card__icon">
+              <i class="fas fa-mobile-screen-button"></i>
+            </div>
+            <h3 class="service-card__title">Мобильные приложения</h3>
+            <p class="service-card__text">
+              Нативная и кроссплатформенная разработка мобильных приложений 
+              для iOS и Android с безупречным UX.
+            </p>
+            <ul class="service-card__list">
+              <li><i class="fas fa-check"></i> iOS (Swift) и Android (Kotlin)</li>
+              <li><i class="fas fa-check"></i> React Native / Flutter</li>
+              <li><i class="fas fa-check"></i> Push-уведомления и аналитика</li>
+              <li><i class="fas fa-check"></i> Публикация в App Store и Google Play</li>
+            </ul>
+          </article>
+
+          <article class="service-card reveal reveal--delay-3">
+            <div class="service-card__icon">
+              <i class="fas fa-palette"></i>
+            </div>
+            <h3 class="service-card__title">UI/UX дизайн</h3>
+            <p class="service-card__text">
+              Проектирую интуитивные интерфейсы, которые нравятся пользователям 
+              и повышают конверсию вашего продукта.
+            </p>
+            <ul class="service-card__list">
+              <li><i class="fas fa-check"></i> Прототипирование и wireframes</li>
+              <li><i class="fas fa-check"></i> Дизайн-системы и брендинг</li>
+              <li><i class="fas fa-check"></i> Usability-тестирование</li>
+              <li><i class="fas fa-check"></i> Анимации и микровзаимодействия</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Что входит в работу -->
+    <section class="section guarantees" id="guarantees">
+      <div class="container">
+        <h2 class="section__title reveal">Что вы <span class="section__title--gradient">получаете</span></h2>
+        <p class="section__subtitle reveal reveal--delay-1">
+          Работаю прозрачно — без скрытых условий и сюрпризов в конце
+        </p>
+        <div class="guarantees__grid">
+          <article class="guarantee-card reveal reveal--delay-1">
+            <div class="guarantee-card__icon"><i class="fas fa-file-contract"></i></div>
+            <h3 class="guarantee-card__title">Фиксированная смета</h3>
+            <p class="guarantee-card__text">
+              Обсуждаем задачу, согласуем цену и сроки до начала работы. 
+              Финальная стоимость не меняется без вашего согласия.
+            </p>
+          </article>
+          <article class="guarantee-card reveal reveal--delay-2">
+            <div class="guarantee-card__icon"><i class="fas fa-life-ring"></i></div>
+            <h3 class="guarantee-card__title">Поддержка после запуска</h3>
+            <p class="guarantee-card__text">
+              2 недели бесплатной поддержки после публикации — исправлю баги 
+              и помогу с мелкими правками.
+            </p>
+          </article>
+          <article class="guarantee-card reveal reveal--delay-3">
+            <div class="guarantee-card__icon"><i class="fas fa-folder-open"></i></div>
+            <h3 class="guarantee-card__title">Передача проекта</h3>
+            <p class="guarantee-card__text">
+              Передаю исходный код, доступы к хостингу и домену. 
+              Вы полностью владеете своим продуктом.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Калькулятор стоимости -->
+    <section class="section calculator" id="calculator">
+      <div class="container">
+        <h2 class="section__title reveal">Рассчитайте <span class="section__title--gradient">стоимость</span></h2>
+        <p class="section__subtitle reveal reveal--delay-1">
+          Выберите тип проекта — получите ориентировочную цену и сроки
+        </p>
+        <div class="calc__layout reveal reveal--delay-2">
+          <div class="calc__options" id="calcOptions">
+            <button type="button" class="calc__option calc__option--active" data-calc="landing">
+              <span class="calc__option-icon"><i class="fas fa-file-lines"></i></span>
+              <span class="calc__option-title">Лендинг</span>
+              <span class="calc__option-desc">Одностраничный сайт для продаж или услуг</span>
+            </button>
+            <button type="button" class="calc__option" data-calc="corporate">
+              <span class="calc__option-icon"><i class="fas fa-building"></i></span>
+              <span class="calc__option-title">Корпоративный сайт</span>
+              <span class="calc__option-desc">Многостраничный сайт компании</span>
+            </button>
+            <button type="button" class="calc__option" data-calc="shop">
+              <span class="calc__option-icon"><i class="fas fa-cart-shopping"></i></span>
+              <span class="calc__option-title">Интернет-магазин</span>
+              <span class="calc__option-desc">Каталог, корзина, оплата онлайн</span>
+            </button>
+            <button type="button" class="calc__option" data-calc="mobile">
+              <span class="calc__option-icon"><i class="fas fa-mobile-screen"></i></span>
+              <span class="calc__option-title">Мобильное приложение</span>
+              <span class="calc__option-desc">iOS и Android под ваш бизнес</span>
+            </button>
+            <button type="button" class="calc__option" data-calc="webapp">
+              <span class="calc__option-icon"><i class="fas fa-window-maximize"></i></span>
+              <span class="calc__option-title">Веб-приложение</span>
+              <span class="calc__option-desc">CRM, портал, SaaS-сервис</span>
+            </button>
+            <button type="button" class="calc__option" data-calc="custom">
+              <span class="calc__option-icon"><i class="fas fa-wand-magic-sparkles"></i></span>
+              <span class="calc__option-title">Индивидуальный проект</span>
+              <span class="calc__option-desc">Нестандартная задача — обсудим лично</span>
+            </button>
+          </div>
+          <div class="calc__result" id="calcResult">
+            <div class="calc__result-label">Ориентировочная стоимость</div>
+            <div class="calc__result-type" id="calcResultType">Лендинг</div>
+            <div class="calc__result-price" id="calcResultPrice">от 15 000 ₽</div>
+            <div class="calc__result-time" id="calcResultTime"><i class="fas fa-clock"></i> 3–7 дней</div>
+            <a href="#contacts" class="btn btn--primary">
+              <i class="fas fa-paper-plane"></i> Обсудить проект
+            </a>
+            <p class="calc__result-note">Точная цена после бесплатной консультации. Финальная смета фиксируется до начала работы.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Пакеты услуг -->
+    <section class="section packages" id="packages">
+      <div class="container">
+        <h2 class="section__title reveal">Пакеты <span class="section__title--gradient">услуг</span></h2>
+        <p class="section__subtitle reveal reveal--delay-1">
+          Популярные форматы — точная цена зависит от вашей задачи
+        </p>
+        <div class="packages__grid">
+          <article class="package-card reveal reveal--delay-1">
+            <h3 class="package-card__name">Старт</h3>
+            <div class="package-card__price">от 15 000 ₽</div>
+            <div class="package-card__time"><i class="fas fa-clock"></i> 3–7 дней</div>
+            <p class="package-card__desc">Идеально для запуска продукта или услуги в интернете</p>
+            <ul class="package-card__list">
+              <li><i class="fas fa-check"></i> Лендинг до 5 секций</li>
+              <li><i class="fas fa-check"></i> Адаптив под все устройства</li>
+              <li><i class="fas fa-check"></i> Форма заявки</li>
+              <li><i class="fas fa-check"></i> Базовая SEO-настройка</li>
+            </ul>
+            <a href="#contacts" class="btn btn--outline" data-package="Старт"><i class="fas fa-paper-plane"></i> Заказать</a>
+          </article>
+
+          <article class="package-card package-card--popular reveal reveal--delay-2">
+            <span class="package-card__badge">Популярный</span>
+            <h3 class="package-card__name">Бизнес</h3>
+            <div class="package-card__price">от 30 000 ₽</div>
+            <div class="package-card__time"><i class="fas fa-clock"></i> 1–4 недели</div>
+            <p class="package-card__desc">Сайт компании или интернет-магазин под ключ</p>
+            <ul class="package-card__list">
+              <li><i class="fas fa-check"></i> До 10 страниц или каталог</li>
+              <li><i class="fas fa-check"></i> Админ-панель</li>
+              <li><i class="fas fa-check"></i> Интеграция с мессенджерами</li>
+              <li><i class="fas fa-check"></i> 2 недели поддержки</li>
+            </ul>
+            <a href="#contacts" class="btn btn--primary" data-package="Бизнес"><i class="fas fa-paper-plane"></i> Заказать</a>
+          </article>
+
+          <article class="package-card reveal reveal--delay-3">
+            <h3 class="package-card__name">Премиум</h3>
+            <div class="package-card__price">от 80 000 ₽</div>
+            <div class="package-card__time"><i class="fas fa-clock"></i> 3–6 недель</div>
+            <p class="package-card__desc">Мобильное приложение или сложное веб-приложение</p>
+            <ul class="package-card__list">
+              <li><i class="fas fa-check"></i> iOS / Android или веб-приложение</li>
+              <li><i class="fas fa-check"></i> API и база данных</li>
+              <li><i class="fas fa-check"></i> Публикация в сторах</li>
+              <li><i class="fas fa-check"></i> Расширенная поддержка</li>
+            </ul>
+            <a href="#contacts" class="btn btn--outline" data-package="Премиум"><i class="fas fa-paper-plane"></i> Заказать</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Квиз -->
+    <section class="section quiz" id="quiz">
+      <div class="container">
+        <h2 class="section__title reveal">Какой проект <span class="section__title--gradient">вам нужен?</span></h2>
+        <p class="section__subtitle reveal reveal--delay-1">
+          Ответьте на 4 вопроса — подберу формат и ориентир по цене
+        </p>
+        <div class="quiz__card reveal reveal--delay-2" id="quizCard">
+          <div class="quiz__progress"><div class="quiz__progress-bar" id="quizProgress"></div></div>
+
+          <div class="quiz__step quiz__step--active" data-step="0">
+            <h3 class="quiz__question">Что вам нужно?</h3>
+            <div class="quiz__options">
+              <button type="button" class="quiz__option" data-quiz="type" data-value="landing">
+                <span class="quiz__option-icon"><i class="fas fa-file-lines"></i></span>
+                Сайт / лендинг
+              </button>
+              <button type="button" class="quiz__option" data-quiz="type" data-value="shop">
+                <span class="quiz__option-icon"><i class="fas fa-cart-shopping"></i></span>
+                Интернет-магазин
+              </button>
+              <button type="button" class="quiz__option" data-quiz="type" data-value="mobile">
+                <span class="quiz__option-icon"><i class="fas fa-mobile-screen"></i></span>
+                Мобильное приложение
+              </button>
+              <button type="button" class="quiz__option" data-quiz="type" data-value="custom">
+                <span class="quiz__option-icon"><i class="fas fa-circle-question"></i></span>
+                Пока не знаю — помогите выбрать
+              </button>
+            </div>
+          </div>
+
+          <div class="quiz__step" data-step="1">
+            <h3 class="quiz__question">Какая главная цель?</h3>
+            <div class="quiz__options">
+              <button type="button" class="quiz__option" data-quiz="goal" data-value="sales">
+                <span class="quiz__option-icon"><i class="fas fa-chart-line"></i></span>
+                Продажи и заявки
+              </button>
+              <button type="button" class="quiz__option" data-quiz="goal" data-value="brand">
+                <span class="quiz__option-icon"><i class="fas fa-building"></i></span>
+                Имидж и доверие к бренду
+              </button>
+              <button type="button" class="quiz__option" data-quiz="goal" data-value="automation">
+                <span class="quiz__option-icon"><i class="fas fa-gears"></i></span>
+                Автоматизация процессов
+              </button>
+              <button type="button" class="quiz__option" data-quiz="goal" data-value="other">
+                <span class="quiz__option-icon"><i class="fas fa-lightbulb"></i></span>
+                Другое
+              </button>
+            </div>
+          </div>
+
+          <div class="quiz__step" data-step="2">
+            <h3 class="quiz__question">Ориентировочный бюджет?</h3>
+            <div class="quiz__options">
+              <button type="button" class="quiz__option" data-quiz="budget" data-value="low">
+                <span class="quiz__option-icon"><i class="fas fa-coins"></i></span>
+                До 30 000 ₽
+              </button>
+              <button type="button" class="quiz__option" data-quiz="budget" data-value="mid">
+                <span class="quiz__option-icon"><i class="fas fa-wallet"></i></span>
+                30 000 – 80 000 ₽
+              </button>
+              <button type="button" class="quiz__option" data-quiz="budget" data-value="high">
+                <span class="quiz__option-icon"><i class="fas fa-gem"></i></span>
+                От 80 000 ₽
+              </button>
+              <button type="button" class="quiz__option" data-quiz="budget" data-value="discuss">
+                <span class="quiz__option-icon"><i class="fas fa-comments"></i></span>
+                Обсудим на созвоне
+              </button>
+            </div>
+          </div>
+
+          <div class="quiz__step" data-step="3">
+            <h3 class="quiz__question">Когда нужен результат?</h3>
+            <div class="quiz__options">
+              <button type="button" class="quiz__option" data-quiz="deadline" data-value="urgent">
+                <span class="quiz__option-icon"><i class="fas fa-bolt"></i></span>
+                Как можно скорее
+              </button>
+              <button type="button" class="quiz__option" data-quiz="deadline" data-value="month">
+                <span class="quiz__option-icon"><i class="fas fa-calendar"></i></span>
+                В течение месяца
+              </button>
+              <button type="button" class="quiz__option" data-quiz="deadline" data-value="flexible">
+                <span class="quiz__option-icon"><i class="fas fa-hourglass-half"></i></span>
+                Сроки не критичны
+              </button>
+            </div>
+          </div>
+
+          <div class="quiz__result" id="quizResult">
+            <div class="quiz__result-icon"><i class="fas fa-check"></i></div>
+            <div class="quiz__result-type" id="quizResultType">Лендинг</div>
+            <div class="quiz__result-price" id="quizResultPrice">от 15 000 ₽ · 3–7 дней</div>
+            <p class="quiz__result-text" id="quizResultText">Отличный выбор для быстрого старта продаж</p>
+            <p class="quiz__result-notice" id="quizResultNotice" hidden></p>
+            <div class="quiz__result-actions">
+              <a href="#contacts" class="btn btn--primary" id="quizContactBtn"><i class="fas fa-paper-plane"></i> Обсудить проект</a>
+              <a href="#" class="btn btn--outline" id="quizTelegramBtn" target="_blank" rel="noopener"><i class="fab fa-telegram"></i> Написать в Telegram</a>
+            </div>
+          </div>
+
+          <div class="quiz__nav" id="quizNav">
+            <button type="button" class="btn btn--outline" id="quizPrev" disabled><i class="fas fa-arrow-left"></i> Назад</button>
+            <button type="button" class="btn btn--primary" id="quizNext" disabled>Далее <i class="fas fa-arrow-right"></i></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Как я работаю -->
+    <section class="section process" id="process">
+      <div class="container">
+        <h2 class="section__title reveal">Как я <span class="section__title--gradient">работаю</span></h2>
+        <p class="section__subtitle reveal reveal--delay-1">
+          Прозрачный процесс — вы всегда знаете, на каком этапе находится проект
+        </p>
+        <div class="process__steps">
+          <article class="process-step reveal reveal--delay-1">
+            <div class="process-step__number">1</div>
+            <h3 class="process-step__title">Заявка</h3>
+            <p class="process-step__text">Вы описываете задачу — я уточняю детали и предлагаю решение</p>
+          </article>
+          <article class="process-step reveal reveal--delay-2">
+            <div class="process-step__number">2</div>
+            <h3 class="process-step__title">Обсуждение</h3>
+            <p class="process-step__text">Согласуем сроки, бюджет и техническое задание</p>
+          </article>
+          <article class="process-step reveal reveal--delay-3">
+            <div class="process-step__number">3</div>
+            <h3 class="process-step__title">Разработка</h3>
+            <p class="process-step__text">Создаю продукт с регулярными демо и обратной связью</p>
+          </article>
+          <article class="process-step reveal reveal--delay-4">
+            <div class="process-step__number">4</div>
+            <h3 class="process-step__title">Тестирование</h3>
+            <p class="process-step__text">Проверяю работу на всех устройствах и исправляю недочёты</p>
+          </article>
+          <article class="process-step reveal reveal--delay-5">
+            <div class="process-step__number">5</div>
+            <h3 class="process-step__title">Запуск</h3>
+            <p class="process-step__text">Публикую проект и остаюсь на связи для поддержки</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Технологии -->
+    <section class="section tech" id="tech">
+      <div class="container">
+        <h2 class="section__title reveal">Мой <span class="section__title--gradient">стек</span></h2>
+        <p class="section__subtitle reveal reveal--delay-1">
+          Инструменты, с которыми создаю современные и надёжные продукты
+        </p>
+        <div class="tech__grid reveal reveal--delay-2">
+          <div class="tech__item"><i class="fab fa-html5"></i> HTML5</div>
+          <div class="tech__item"><i class="fab fa-css3-alt"></i> CSS3</div>
+          <div class="tech__item"><i class="fab fa-js"></i> JavaScript</div>
+          <div class="tech__item"><i class="fab fa-react"></i> React</div>
+          <div class="tech__item"><i class="fab fa-node-js"></i> Node.js</div>
+          <div class="tech__item"><i class="fab fa-python"></i> Python</div>
+          <div class="tech__item"><i class="fab fa-flutter"></i> Flutter</div>
+          <div class="tech__item"><i class="fab fa-apple"></i> Swift / iOS</div>
+          <div class="tech__item"><i class="fab fa-android"></i> Kotlin / Android</div>
+          <div class="tech__item"><i class="fab fa-figma"></i> Figma</div>
+          <div class="tech__item"><i class="fab fa-git-alt"></i> Git</div>
+          <div class="tech__item"><i class="fas fa-database"></i> SQL</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GitHub-проекты -->
+    <section class="section github" id="github">
+      <div class="container">
+        <div class="github__header reveal">
+          <div>
+            <h2 class="section__title" style="text-align:left;margin-bottom:8px">Мои проекты на <span class="section__title--gradient">GitHub</span></h2>
+            <p class="section__subtitle" style="text-align:left;margin:0">Открытый код и реальные работы — без выдуманного портфолио</p>
+          </div>
+          <a href="https://github.com/dovudusmonov24-blip" class="github__profile" target="_blank" rel="noopener">
+            <i class="fab fa-github"></i>
+            <span>dovudusmonov24-blip</span>
+          </a>
+        </div>
+        <div class="github__grid reveal reveal--delay-1" id="githubGrid">
+          <div class="github__loading">
+            <i class="fas fa-circle-notch"></i>
+            Загрузка проектов...
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section faq" id="faq">
+      <div class="container">
+        <h2 class="section__title reveal">Частые <span class="section__title--gradient">вопросы</span></h2>
+        <p class="section__subtitle reveal reveal--delay-1">
+          Ответы на то, что чаще всего спрашивают перед началом работы
+        </p>
+        <div class="faq__list reveal reveal--delay-2" id="faqList">
+          <div class="faq-item">
+            <button class="faq-item__question" type="button" aria-expanded="false">
+              Сколько стоит разработка?
+              <span class="faq-item__icon"><i class="fas fa-plus"></i></span>
+            </button>
+            <div class="faq-item__answer">
+              <div class="faq-item__answer-inner">
+                Стоимость зависит от сложности проекта. Лендинг — от 15 000 ₽, 
+                интернет-магазин — от 50 000 ₽, мобильное приложение — от 80 000 ₽. 
+                Точную цену рассчитаю после обсуждения вашей задачи — консультация бесплатная.
+              </div>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-item__question" type="button" aria-expanded="false">
+              Какие сроки разработки?
+              <span class="faq-item__icon"><i class="fas fa-plus"></i></span>
+            </button>
+            <div class="faq-item__answer">
+              <div class="faq-item__answer-inner">
+                Лендинг — 3–7 дней, корпоративный сайт — 1–2 недели, 
+                интернет-магазин — 2–4 недели, мобильное приложение — 3–6 недель. 
+                Сроки фиксируем в договорённости до начала работы.
+              </div>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-item__question" type="button" aria-expanded="false">
+              Нужна ли предоплата?
+              <span class="faq-item__icon"><i class="fas fa-plus"></i></span>
+            </button>
+            <div class="faq-item__answer">
+              <div class="faq-item__answer-inner">
+                Да, обычно работаю по схеме 50/50: половина перед стартом, 
+                половина после сдачи проекта. Для небольших задач возможна оплата поэтапно.
+              </div>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-item__question" type="button" aria-expanded="false">
+              Предоставляете ли поддержку после запуска?
+              <span class="faq-item__icon"><i class="fas fa-plus"></i></span>
+            </button>
+            <div class="faq-item__answer">
+              <div class="faq-item__answer-inner">
+                Да, после запуска предоставляю бесплатную поддержку в течение 2 недель. 
+                Далее — по договорённости: разовые правки или абонентское обслуживание.
+              </div>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-item__question" type="button" aria-expanded="false">
+              Как происходит общение в процессе работы?
+              <span class="faq-item__icon"><i class="fas fa-plus"></i></span>
+            </button>
+            <div class="faq-item__answer">
+              <div class="faq-item__answer-inner">
+                Основной канал — Telegram. Также email для документов. 
+                Регулярно отправляю промежуточные результаты и согласовываю каждый этап, 
+                чтобы вы были в курсе прогресса.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA-баннер -->
+    <section class="section cta-banner">
+      <div class="container reveal">
+        <div class="cta-banner__inner">
+          <div class="cta-banner__content">
+            <h2 class="cta-banner__title" id="siteCtaTitle">Есть идея проекта?</h2>
+            <p class="cta-banner__text" id="siteCtaText">Обсудим бесплатно — отвечу в течение 24 часов</p>
+          </div>
+          <a href="https://t.me/WebSprint172" class="btn cta-banner__btn" id="siteCtaTelegram" target="_blank" rel="noopener">
+            <i class="fab fa-telegram"></i> Написать в Telegram
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Отзывы -->
+    <section class="section reviews" id="reviews">
+      <div class="container">
+        <h2 class="section__title reveal">Отзывы <span class="section__title--gradient">клиентов</span></h2>
+        <p class="section__subtitle reveal reveal--delay-1">
+          Реальные впечатления — оставьте свой отзыв о нашей работе
+        </p>
+
+        <!-- Средний балл -->
+        <div class="reviews__summary reveal reveal--delay-2" id="reviewsSummary" hidden>
+          <div class="reviews__summary-score" id="reviewsAvgScore">0.0</div>
+          <div class="reviews__summary-info">
+            <div class="reviews__summary-stars" id="reviewsAvgStars"></div>
+            <div class="reviews__summary-count" id="reviewsAvgCount">Средний балл</div>
+          </div>
+        </div>
+
+        <!-- Форма добавления отзыва -->
+        <div class="reviews__form-wrapper reveal reveal--delay-2">
+          <h3 class="reviews__form-title">Оставить отзыв</h3>
+            <div class="form-success" id="reviewSuccess">
+              <i class="fas fa-check-circle"></i>
+              Отзыв сохранён! Он останется на сайте после перезагрузки страницы.
+            </div>
+            <form id="reviewForm">
+            <div class="form-group">
+              <label for="reviewName">Ваше имя</label>
+              <input type="text" id="reviewName" class="form-input" placeholder="Иван Иванов" required>
+              <span class="form-error" id="reviewNameError">Пожалуйста, введите имя</span>
+            </div>
+            <div class="form-group">
+              <label for="reviewText">Текст отзыва</label>
+              <textarea id="reviewText" class="form-textarea" placeholder="Расскажите о вашем опыте работы..." required></textarea>
+              <span class="form-error" id="reviewTextError">Пожалуйста, напишите отзыв</span>
+            </div>
+            <div class="form-group">
+              <label>Оценка</label>
+              <div class="star-rating" id="starRating">
+                <button type="button" class="star-rating__star" data-value="1"><i class="fas fa-star"></i></button>
+                <button type="button" class="star-rating__star" data-value="2"><i class="fas fa-star"></i></button>
+                <button type="button" class="star-rating__star" data-value="3"><i class="fas fa-star"></i></button>
+                <button type="button" class="star-rating__star" data-value="4"><i class="fas fa-star"></i></button>
+                <button type="button" class="star-rating__star" data-value="5"><i class="fas fa-star"></i></button>
+              </div>
+              <span class="form-error" id="reviewRatingError">Пожалуйста, выберите оценку</span>
+            </div>
+            <button type="submit" class="btn btn--primary">
+              <i class="fas fa-comment-dots"></i> Оставить отзыв
+            </button>
+          </form>
+        </div>
+
+        <!-- Список отзывов -->
+        <div class="reviews__list" id="reviewsList"></div>
+        <button type="button" class="btn btn--outline reviews__load-more" id="reviewsLoadMore" hidden>
+          Показать ещё
+        </button>
+        <div class="reviews__empty" id="reviewsEmpty">
+          <i class="fas fa-comments"></i>
+          <p>Пока нет отзывов. Будьте первым!</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Контакты -->
+    <section class="section contacts" id="contacts">
+      <div class="container">
+        <h2 class="section__title reveal">Свяжитесь <span class="section__title--gradient">со мной</span></h2>
+        <p class="section__subtitle reveal reveal--delay-1" id="siteContactsSubtitle">
+          Готов обсудить ваш проект — напишите, и я отвечу в течение 24 часов
+        </p>
+
+        <div class="contacts__grid">
+          <div class="contacts__info reveal reveal--delay-1">
+            <h3 class="contacts__info-title">Контактная информация</h3>
+            <p class="contacts__info-text">
+              Выберите удобный способ связи или заполните форму — 
+              я свяжусь с вами для обсуждения деталей проекта.
+            </p>
+            <div class="contacts__items">
+              <a href="mailto:websprin72@gmail.com" class="contacts__item" id="siteContactEmailLink">
+                <div class="contacts__item-icon"><i class="fas fa-envelope"></i></div>
+                <div>
+                  <div class="contacts__item-label">Email</div>
+                  <div class="contacts__item-value" id="siteContactEmail">websprin72@gmail.com</div>
+                </div>
+              </a>
+              <a href="https://t.me/WebSprint172" class="contacts__item" id="siteContactTelegramLink" target="_blank" rel="noopener">
+                <div class="contacts__item-icon"><i class="fab fa-telegram"></i></div>
+                <div>
+                  <div class="contacts__item-label">Telegram</div>
+                  <div class="contacts__item-value" id="siteContactTelegram">@WebSprint172</div>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <div class="contacts__form reveal reveal--delay-2">
+            <h3 class="contacts__form-title">Форма обратной связи</h3>
+            <div class="form-success" id="contactSuccess">
+              <i class="fas fa-check-circle"></i>
+              Сообщение успешно отправлено! Я свяжусь с вами в ближайшее время.
+            </div>
+            <form id="contactForm">
+              <div class="form-group">
+                <label for="contactName">Имя</label>
+                <input type="text" id="contactName" class="form-input" placeholder="Ваше имя" required>
+                <span class="form-error" id="contactNameError">Введите имя</span>
+              </div>
+              <div class="form-group">
+                <label for="contactEmail">Email</label>
+                <input type="email" id="contactEmail" class="form-input" placeholder="email@example.com" required>
+                <span class="form-error" id="contactEmailError">Введите корректный email</span>
+              </div>
+              <div class="form-group">
+                <label for="contactMessage">Сообщение</label>
+                <textarea id="contactMessage" class="form-textarea" placeholder="Опишите ваш проект..." required></textarea>
+                <span class="form-error" id="contactMessageError">Введите сообщение</span>
+              </div>
+              <div class="form-group form-group--checkbox">
+                <label class="form-checkbox">
+                  <input type="checkbox" id="contactPrivacy" required>
+                  <span>Согласен на <button type="button" class="form-link" id="openPrivacyFromForm">обработку персональных данных</button></span>
+                </label>
+                <span class="form-error" id="contactPrivacyError">Необходимо согласие</span>
+              </div>
+              <button type="submit" class="btn btn--primary">
+                <i class="fas fa-paper-plane"></i> Отправить
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Футер -->
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div>
+        <p class="footer__copy">&copy; 2026 WebSprint. Все права защищены.</p>
+        <div class="footer__links">
+          <button type="button" class="footer__link" id="openPrivacy">Политика конфиденциальности</button>
+        </div>
+      </div>
+      <div class="footer__socials">
+        <a href="https://github.com/dovudusmonov24-blip" class="footer__social-link" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
+        <a href="https://t.me/WebSprint172" class="footer__social-link" id="siteFooterTelegram" target="_blank" rel="noopener" aria-label="Telegram"><i class="fab fa-telegram"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Кнопка «Наверх» -->
+  <!-- Плавающая кнопка Telegram -->
+  <a href="https://t.me/WebSprint172" class="tg-float" id="tgFloat" target="_blank" rel="noopener" aria-label="Написать в Telegram">
+    <i class="fab fa-telegram"></i>
+    <span class="tg-float__tooltip">Написать в Telegram</span>
+  </a>
+
+  <button class="scroll-top" id="scrollTop" aria-label="Наверх">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+
+  <!-- Политика конфиденциальности -->
+  <div class="modal" id="privacyModal" role="dialog" aria-modal="true" aria-labelledby="privacyTitle">
+    <div class="modal__dialog">
+      <h2 class="modal__title" id="privacyTitle">Политика конфиденциальности</h2>
+      <p class="modal__text">Настоящая политика описывает порядок обработки персональных данных на сайте WebSprint.</p>
+      <p class="modal__text"><strong>1. Какие данные собираются:</strong> имя, email и текст сообщения, которые вы добровольно указываете в форме обратной связи или при оставлении отзыва.</p>
+      <p class="modal__text"><strong>2. Цель обработки:</strong> связь с вами для обсуждения проекта, отправка ответа на заявку и улучшение качества услуг.</p>
+      <p class="modal__text"><strong>3. Хранение:</strong> заявки отправляются на email websprin72@gmail.com. Отзывы хранятся локально в браузере пользователя до публикации на сайте.</p>
+      <p class="modal__text"><strong>4. Передача третьим лицам:</strong> данные не передаются третьим лицам, за исключением сервисов доставки сообщений (FormSubmit, Telegram), необходимых для обработки заявки.</p>
+      <p class="modal__text"><strong>5. Ваши права:</strong> вы можете запросить удаление или изменение своих данных, написав на websprin72@gmail.com.</p>
+      <p class="modal__text"><strong>6. Контакты:</strong> websprin72@gmail.com, Telegram @WebSprint172.</p>
+      <button type="button" class="btn btn--primary modal__close" id="closePrivacy">Понятно</button>
+    </div>
+  </div>
+
+  <script src="site-config.js"></script>
+  <script src="local-config.js" onerror="window.__WS_LOCAL_CONFIG__=window.__WS_LOCAL_CONFIG__||{}"></script>
+  <script src="telegram-bot.js"></script>
+  <script>
+    /* ===== Применение настроек из админ-панели ===== */
+    SiteConfig.applyToPage();
+
+    /* ===== Модуль оптимизации производительности ===== */
+    const Perf = {
+      // Throttle через requestAnimationFrame — не чаще 1 раза за кадр
+      rafThrottle(fn) {
+        let ticking = false;
+        return (...args) => {
+          if (ticking) return;
+          ticking = true;
+          requestAnimationFrame(() => {
+            ticking = false;
+            fn(...args);
+          });
+        };
+      },
+
+      // Debounce для редких тяжёлых операций
+      debounce(fn, delay = 150) {
+        let timer;
+        return (...args) => {
+          clearTimeout(timer);
+          timer = setTimeout(() => fn(...args), delay);
+        };
+      },
+
+      // Проверка слабого устройства или режима экономии
+      isLowEndDevice() {
+        const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+        return (
+          window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+          (conn && (conn.saveData || conn.effectiveType === 'slow-2g' || conn.effectiveType === '2g')) ||
+          (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 2)
+        );
+      },
+
+      // Отложенный запуск некритичных задач
+      idle(callback) {
+        if ('requestIdleCallback' in window) {
+          requestIdleCallback(callback, { timeout: 2000 });
+        } else {
+          setTimeout(callback, 1);
+        }
+      }
+    };
+
+    /* ===== Прелоадер ===== */
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById('preloader').classList.add('preloader--hidden');
+      }, 1000);
+    });
+
+    /* ===== Генерация CSS-частиц (ленивая, адаптивная) ===== */
+    function createParticles() {
+      if (Perf.isLowEndDevice()) return;
+
+      const container = document.getElementById('particles');
+      if (!container) return;
+
+      const isMobile = window.matchMedia('(max-width: 768px)').matches;
+      const count = isMobile ? 8 : 18;
+      const fragment = document.createDocumentFragment();
+
+      for (let i = 0; i < count; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.cssText = `
+          left:${Math.random() * 100}%;
+          animation-duration:${Math.random() * 10 + 8}s;
+          animation-delay:${Math.random() * 10}s;
+          width:${Math.random() * 4 + 2}px;
+          height:${Math.random() * 4 + 2}px;
+        `;
+        fragment.appendChild(particle);
+      }
+
+      container.appendChild(fragment);
+    }
+
+    Perf.idle(createParticles);
+
+    /* ===== Пауза анимаций при скрытой вкладке ===== */
+    document.addEventListener('visibilitychange', () => {
+      document.body.classList.toggle('is-tab-hidden', document.hidden);
+    });
+
+    /* ===== Единый оптимизированный обработчик скролла ===== */
+    const header = document.getElementById('header');
+    const scrollTopBtn = document.getElementById('scrollTop');
+    let lastScrollY = 0;
+    let headerScrolled = false;
+    let scrollTopVisible = false;
+
+    const onScroll = Perf.rafThrottle(() => {
+      const scrollY = window.scrollY;
+
+      // Шапка — обновляем класс только при смене состояния
+      const shouldScrollHeader = scrollY > 50;
+      if (shouldScrollHeader !== headerScrolled) {
+        headerScrolled = shouldScrollHeader;
+        header.classList.toggle('header--scrolled', headerScrolled);
+      }
+
+      // Кнопка «Наверх»
+      const shouldShowTop = scrollY > 300;
+      if (shouldShowTop !== scrollTopVisible) {
+        scrollTopVisible = shouldShowTop;
+        scrollTopBtn.classList.toggle('scroll-top--visible', scrollTopVisible);
+      }
+
+      lastScrollY = scrollY;
+    });
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    /* ===== Мобильное меню ===== */
+    const burger = document.getElementById('burger');
+    const nav = document.getElementById('nav');
+    const navOverlay = document.getElementById('navOverlay');
+
+    function toggleMenu() {
+      burger.classList.toggle('burger--active');
+      nav.classList.toggle('nav--open');
+      navOverlay.classList.toggle('nav-overlay--visible');
+      document.body.style.overflow = nav.classList.contains('nav--open') ? 'hidden' : '';
+    }
+
+    burger.addEventListener('click', toggleMenu);
+    navOverlay.addEventListener('click', toggleMenu);
+
+    document.querySelectorAll('.nav__link').forEach(link => {
+      link.addEventListener('click', () => {
+        if (nav.classList.contains('nav--open')) toggleMenu();
+      });
+    });
+
+    /* ===== Переключатель темы ===== */
+    const themeToggle = document.getElementById('themeToggle');
+    const savedTheme = localStorage.getItem('websprint-theme') || 'dark';
+
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    updateThemeIcon(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('websprint-theme', next);
+      updateThemeIcon(next);
+    });
+
+    function updateThemeIcon(theme) {
+      themeToggle.innerHTML = theme === 'dark'
+        ? '<i class="fas fa-moon"></i>'
+        : '<i class="fas fa-sun"></i>';
+    }
+
+    /* ===== Intersection Observer — анимация при скролле ===== */
+    const revealElements = document.querySelectorAll('.reveal');
+
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('reveal--visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.15,
+      rootMargin: '0px 0px -50px 0px'
+    });
+
+    revealElements.forEach(el => revealObserver.observe(el));
+
+    scrollTopBtn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    /* ===== Система отзывов (localStorage) ===== */
+    const REVIEWS_KEY = 'websprint-reviews';
+    const REVIEWS_PAGE_SIZE = 12; // Пагинация — не грузим все карточки сразу
+    let selectedRating = 0;
+    let reviewsVisibleCount = REVIEWS_PAGE_SIZE;
+
+    const reviewForm = document.getElementById('reviewForm');
+    const reviewSuccess = document.getElementById('reviewSuccess');
+    const reviewsList = document.getElementById('reviewsList');
+    const reviewsEmpty = document.getElementById('reviewsEmpty');
+    const reviewsLoadMore = document.getElementById('reviewsLoadMore');
+    const reviewsSummary = document.getElementById('reviewsSummary');
+    const reviewsAvgScore = document.getElementById('reviewsAvgScore');
+    const reviewsAvgStars = document.getElementById('reviewsAvgStars');
+    const reviewsAvgCount = document.getElementById('reviewsAvgCount');
+    const starRating = document.getElementById('starRating');
+    const stars = starRating.querySelectorAll('.star-rating__star');
+
+    // Кэш загруженных отзывов в памяти — меньше обращений к storage
+    let reviewsCache = null;
+
+    // Загрузка отзывов из localStorage (с резервом в sessionStorage)
+    function loadReviews(force = false) {
+      if (reviewsCache && !force) return reviewsCache;
+
+      for (const storage of [localStorage, sessionStorage]) {
+        try {
+          const raw = storage.getItem(REVIEWS_KEY);
+          if (raw) {
+            const reviews = JSON.parse(raw);
+            if (Array.isArray(reviews)) {
+              reviewsCache = reviews;
+              return reviews;
+            }
+          }
+        } catch {
+          /* пробуем следующее хранилище */
+        }
+      }
+
+      reviewsCache = [];
+      return reviewsCache;
+    }
+
+    // Сохранение отзывов в localStorage и sessionStorage
+    function saveReviews(reviews) {
+      const data = JSON.stringify(reviews);
+      reviewsCache = reviews;
+      let saved = false;
+
+      try {
+        localStorage.setItem(REVIEWS_KEY, data);
+        saved = true;
+      } catch {
+        console.warn('localStorage недоступен, используется sessionStorage');
+      }
+
+      try {
+        sessionStorage.setItem(REVIEWS_KEY, data);
+        saved = true;
+      } catch {
+        console.warn('sessionStorage недоступен');
+      }
+
+      return saved;
+    }
+
+    // Быстрое экранирование HTML без создания DOM-узлов
+    const ESCAPE_MAP = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+    function escapeHtml(text) {
+      return String(text).replace(/[&<>"']/g, char => ESCAPE_MAP[char]);
+    }
+
+    // Получение инициалов из имени
+    function getInitials(name) {
+      return name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+    }
+
+    // Форматирование даты
+    function formatDate(isoString) {
+      const date = new Date(isoString);
+      return date.toLocaleDateString('ru-RU', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+      });
+    }
+
+    // Генерация HTML звёзд (только для чтения)
+    function renderStars(rating) {
+      let html = '<div class="star-rating star-rating--readonly">';
+      for (let i = 1; i <= 5; i++) {
+        const active = i <= rating ? 'star-rating__star--active' : '';
+        html += `<span class="star-rating__star ${active}"><i class="fas fa-star"></i></span>`;
+      }
+      html += '</div>';
+      return html;
+    }
+
+    // Склонение слова «отзыв»
+    function pluralReviews(count) {
+      const mod10 = count % 10;
+      const mod100 = count % 100;
+      if (mod100 >= 11 && mod100 <= 14) return `${count} отзывов`;
+      if (mod10 === 1) return `${count} отзыв`;
+      if (mod10 >= 2 && mod10 <= 4) return `${count} отзыва`;
+      return `${count} отзывов`;
+    }
+
+    // Расчёт и отображение среднего балла
+    function updateReviewsSummary() {
+      const reviews = loadReviews();
+
+      if (!reviews.length) {
+        reviewsSummary.hidden = true;
+        return;
+      }
+
+      const sum = reviews.reduce((acc, r) => acc + r.rating, 0);
+      const average = Math.round((sum / reviews.length) * 10) / 10;
+
+      reviewsSummary.hidden = false;
+      reviewsSummary.classList.add('reveal--visible');
+      reviewsAvgScore.textContent = average.toFixed(1);
+      reviewsAvgStars.innerHTML = renderStars(Math.round(average));
+      reviewsAvgCount.textContent = `Средний балл · ${pluralReviews(reviews.length)}`;
+    }
+
+    // Отрисовка списка отзывов (батч через DocumentFragment + пагинация)
+    function renderReviews(isNew = false) {
+      const reviews = loadReviews();
+      const visibleReviews = reviews.slice(0, reviewsVisibleCount);
+
+      reviewsEmpty.style.display = reviews.length ? 'none' : 'block';
+      reviewsLoadMore.hidden = reviews.length <= reviewsVisibleCount;
+      updateReviewsSummary();
+
+      const fragment = document.createDocumentFragment();
+
+      visibleReviews.forEach((review, index) => {
+        const card = document.createElement('article');
+        card.className = 'review-card' + (isNew && index === 0 ? ' review-card--new' : '');
+        card.dataset.id = review.id;
+        card.innerHTML = `
+          <div class="review-card__header">
+            <div class="review-card__avatar">${getInitials(review.name)}</div>
+            <div>
+              <div class="review-card__name">${escapeHtml(review.name)}</div>
+              <div class="review-card__date">${formatDate(review.date)}</div>
+            </div>
+          </div>
+          <div class="review-card__rating">${renderStars(review.rating)}</div>
+          <p class="review-card__text">${escapeHtml(review.text)}</p>
+        `;
+        fragment.appendChild(card);
+      });
+
+      reviewsList.replaceChildren(fragment);
+    }
+
+    /* ===== FAQ — аккордеон ===== */
+    function initFaqAccordion() {
+      document.querySelectorAll('.faq-item__question').forEach(button => {
+        button.replaceWith(button.cloneNode(true));
+      });
+
+      document.querySelectorAll('.faq-item__question').forEach(button => {
+        button.addEventListener('click', () => {
+          const item = button.closest('.faq-item');
+          const isOpen = item.classList.contains('faq-item--open');
+
+          document.querySelectorAll('.faq-item--open').forEach(openItem => {
+            openItem.classList.remove('faq-item--open');
+            openItem.querySelector('.faq-item__question').setAttribute('aria-expanded', 'false');
+          });
+
+          if (!isOpen) {
+            item.classList.add('faq-item--open');
+            button.setAttribute('aria-expanded', 'true');
+          }
+        });
+      });
+    }
+
+    window.initFaqAccordion = initFaqAccordion;
+    initFaqAccordion();
+
+    reviewsLoadMore.addEventListener('click', () => {
+      reviewsVisibleCount += REVIEWS_PAGE_SIZE;
+      renderReviews();
+    });
+
+    // Интерактивные звёзды рейтинга
+    stars.forEach(star => {
+      star.addEventListener('click', () => {
+        selectedRating = parseInt(star.dataset.value);
+        updateStars(selectedRating);
+      });
+
+      star.addEventListener('mouseenter', () => {
+        updateStars(parseInt(star.dataset.value), true);
+      });
+    });
+
+    starRating.addEventListener('mouseleave', () => {
+      updateStars(selectedRating);
+    });
+
+    function updateStars(rating, isPreview = false) {
+      stars.forEach(star => {
+        const value = parseInt(star.dataset.value);
+        star.classList.remove('star-rating__star--active', 'star-rating__star--hover-preview');
+
+        if (value <= rating) {
+          star.classList.add(isPreview && value > selectedRating
+            ? 'star-rating__star--hover-preview'
+            : 'star-rating__star--active'
+          );
+        }
+      });
+    }
+
+    // Отправка формы отзыва
+    reviewForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById('reviewName').value.trim();
+      const text = document.getElementById('reviewText').value.trim();
+      let valid = true;
+
+      // Валидация
+      toggleError('reviewNameError', 'reviewName', !name);
+      toggleError('reviewTextError', 'reviewText', !text);
+      toggleError('reviewRatingError', null, !selectedRating);
+
+      if (!name || !text || !selectedRating) {
+        valid = false;
+      }
+
+      if (!valid) return;
+
+      const review = {
+        id: Date.now().toString(),
+        name,
+        text,
+        rating: selectedRating,
+        date: new Date().toISOString()
+      };
+
+      const reviews = loadReviews();
+      reviews.unshift(review);
+
+      if (!saveReviews(reviews)) {
+        alert('Не удалось сохранить отзыв. Откройте сайт через локальный сервер или браузер без режима инкогнито.');
+        return;
+      }
+
+      reviewsVisibleCount = Math.max(reviewsVisibleCount, REVIEWS_PAGE_SIZE);
+
+      // Сброс формы
+      reviewForm.reset();
+      selectedRating = 0;
+      updateStars(0);
+
+      renderReviews(true);
+
+      // Уведомление об успешном сохранении
+      reviewSuccess.classList.add('form-success--visible');
+      setTimeout(() => {
+        reviewSuccess.classList.remove('form-success--visible');
+      }, 4000);
+    });
+
+    function toggleError(errorId, inputId, hasError) {
+      document.getElementById(errorId).classList.toggle('form-error--visible', hasError);
+      if (inputId) {
+        document.getElementById(inputId).classList.toggle('form-input--error', hasError);
+      }
+    }
+
+    // Начальная загрузка отзывов
+    function initReviews() {
+      const raw = loadReviews(true);
+      const filtered = raw.filter(r => !r.id.startsWith('demo-'));
+      if (filtered.length !== raw.length) {
+        saveReviews(filtered);
+      }
+      renderReviews();
+    }
+
+    initReviews();
+
+    /* ===== Оптимизация при изменении размера окна ===== */
+    window.addEventListener('resize', Perf.debounce(() => {
+      revealObserver.disconnect();
+      revealElements.forEach(el => {
+        if (!el.classList.contains('reveal--visible')) {
+          revealObserver.observe(el);
+        }
+      });
+    }, 200), { passive: true });
+
+    /* ===== Эффект печати в герое ===== */
+    (function initTypingEffect() {
+      const words = ['лендинги', 'интернет-магазины', 'мобильные приложения', 'веб-порталы', 'iOS & Android'];
+      const el = document.getElementById('heroTyped');
+      if (!el) return;
+
+      let wordIndex = 0;
+      let charIndex = 0;
+      let isDeleting = false;
+
+      function tick() {
+        const word = words[wordIndex];
+
+        if (!isDeleting) {
+          el.textContent = word.slice(0, ++charIndex);
+          if (charIndex === word.length) {
+            isDeleting = true;
+            setTimeout(tick, 2000);
+            return;
+          }
+        } else {
+          el.textContent = word.slice(0, --charIndex);
+          if (charIndex === 0) {
+            isDeleting = false;
+            wordIndex = (wordIndex + 1) % words.length;
+          }
+        }
+
+        setTimeout(tick, isDeleting ? 50 : 90);
+      }
+
+      tick();
+    })();
+
+    /* ===== Калькулятор стоимости ===== */
+    const calcData = {
+      landing:  { label: 'Лендинг',              price: 'от 15 000 ₽',  time: '3–7 дней' },
+      corporate:{ label: 'Корпоративный сайт',   price: 'от 30 000 ₽',  time: '1–2 недели' },
+      shop:     { label: 'Интернет-магазин',     price: 'от 50 000 ₽',  time: '2–4 недели' },
+      mobile:   { label: 'Мобильное приложение', price: 'от 80 000 ₽',  time: '3–6 недель' },
+      webapp:   { label: 'Веб-приложение',       price: 'от 60 000 ₽',  time: '2–5 недель' },
+      custom:   { label: 'Индивидуальный проект', price: 'индивидуально', time: 'по договорённости' }
+    };
+
+    document.querySelectorAll('.calc__option').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.calc__option').forEach(b => b.classList.remove('calc__option--active'));
+        btn.classList.add('calc__option--active');
+
+        const data = calcData[btn.dataset.calc];
+        if (!data) return;
+
+        document.getElementById('calcResultType').textContent = data.label;
+        document.getElementById('calcResultPrice').textContent = data.price;
+        document.getElementById('calcResultTime').innerHTML = '<i class="fas fa-clock"></i> ' + data.time;
+      });
+    });
+
+    /* ===== Загрузка GitHub-проектов ===== */
+    (async function loadGitHubProjects() {
+      const grid = document.getElementById('githubGrid');
+      if (!grid) return;
+
+      const langColors = {
+        JavaScript: '#f7df1e', TypeScript: '#3178c6', Python: '#3572A5',
+        HTML: '#e34c26', CSS: '#563d7c', Java: '#b07219', Swift: '#F05138',
+        Kotlin: '#A97BFF', Dart: '#00B4AB', 'C++': '#f34b7d', Go: '#00ADD8'
+      };
+
+      try {
+        const res = await fetch('https://api.github.com/users/dovudusmonov24-blip/repos?sort=updated&per_page=12');
+        if (!res.ok) throw new Error('API error');
+
+        let repos = await res.json();
+        repos = repos
+          .filter(r => !r.fork && r.name !== '.' && !r.name.startsWith('-'))
+          .sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))
+          .slice(0, 6);
+
+        if (!repos.length) throw new Error('No repos');
+
+        grid.innerHTML = repos.map(repo => `
+          <a href="${repo.html_url}" class="github-card" target="_blank" rel="noopener">
+            <div class="github-card__name">
+              <i class="fab fa-github"></i> ${escapeHtmlSimple(repo.name)}
+            </div>
+            <p class="github-card__desc">${escapeHtmlSimple(repo.description || 'Проект на GitHub')}</p>
+            <div class="github-card__meta">
+              ${repo.language ? `<span class="github-card__lang"><span class="github-card__lang-dot" style="background:${langColors[repo.language] || '#2563eb'}"></span>${repo.language}</span>` : ''}
+              <span><i class="far fa-star"></i> ${repo.stargazers_count}</span>
+            </div>
+          </a>
+        `).join('');
+      } catch {
+        grid.innerHTML = `
+          <div class="github__error">
+            <i class="fab fa-github" style="font-size:2rem;margin-bottom:12px;display:block"></i>
+            <p>Не удалось загрузить проекты</p>
+            <a href="https://github.com/dovudusmonov24-blip" class="btn btn--outline" style="margin-top:16px" target="_blank" rel="noopener">Открыть GitHub</a>
+          </div>`;
+      }
+    })();
+
+    function escapeHtmlSimple(text) {
+      const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' };
+      return String(text).replace(/[&<>"']/g, c => map[c]);
+    }
+
+    /* ===== Форма обратной связи ===== */
+    const contactForm = document.getElementById('contactForm');
+    const contactSuccess = document.getElementById('contactSuccess');
+    let pendingContactContext = '';
+
+    document.querySelectorAll('[data-package]').forEach(link => {
+      link.addEventListener('click', () => {
+        pendingContactContext = 'Пакет: ' + link.dataset.package;
+        const msg = document.getElementById('contactMessage');
+        if (msg && !msg.value.trim()) {
+          msg.value = 'Интересует пакет «' + link.dataset.package + '». ';
+        }
+      });
+    });
+
+    async function submitContactForm(name, email, message) {
+      const cfg = window.__WS_INTEGRATIONS__ || {};
+      const formEmail = cfg.formEmail || 'websprin72@gmail.com';
+      const context = pendingContactContext || '';
+      const fullMessage = context ? message + '\n\n—\n' + context : message;
+
+      const res = await fetch('https://formsubmit.co/ajax/' + encodeURIComponent(formEmail), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({
+          name,
+          email,
+          message: fullMessage,
+          _subject: 'WebSprint — новая заявка с сайта',
+          _captcha: 'false',
+          _template: 'table'
+        })
+      });
+
+      if (res.ok) {
+        await TelegramBot.notifyForm(name, email, message, context);
+        return true;
+      }
+
+      window.open(
+        TelegramBot.getDeepLink(
+          cfg.telegramUser,
+          'Заявка с сайта WebSprint\n\nИмя: ' + name + '\nEmail: ' + email + '\n\n' + fullMessage
+        ),
+        '_blank'
+      );
+      return true;
+    }
+
+    contactForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById('contactName').value.trim();
+      const email = document.getElementById('contactEmail').value.trim();
+      const message = document.getElementById('contactMessage').value.trim();
+      const privacy = document.getElementById('contactPrivacy').checked;
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      toggleError('contactNameError', 'contactName', !name);
+      toggleError('contactEmailError', 'contactEmail', !emailRegex.test(email));
+      toggleError('contactMessageError', 'contactMessage', !message);
+      toggleError('contactPrivacyError', 'contactPrivacy', !privacy);
+
+      if (!name || !emailRegex.test(email) || !message || !privacy) return;
+
+      const submitBtn = contactForm.querySelector('button[type="submit"]');
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Отправка...';
+
+      try {
+        await submitContactForm(name, email, message);
+        contactForm.reset();
+        pendingContactContext = '';
+        contactSuccess.classList.add('form-success--visible');
+        setTimeout(() => contactSuccess.classList.remove('form-success--visible'), 5000);
+      } catch {
+        alert('Не удалось отправить заявку. Напишите напрямую в Telegram @WebSprint172');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Отправить';
+      }
+    });
+
+    /* ===== Политика конфиденциальности ===== */
+    const privacyModal = document.getElementById('privacyModal');
+
+    function openPrivacyModal() {
+      privacyModal.classList.add('modal--open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closePrivacyModal() {
+      privacyModal.classList.remove('modal--open');
+      document.body.style.overflow = '';
+    }
+
+    document.getElementById('openPrivacy').addEventListener('click', openPrivacyModal);
+    document.getElementById('openPrivacyFromForm').addEventListener('click', (e) => {
+      e.preventDefault();
+      openPrivacyModal();
+    });
+    document.getElementById('closePrivacy').addEventListener('click', closePrivacyModal);
+    privacyModal.addEventListener('click', (e) => {
+      if (e.target === privacyModal) closePrivacyModal();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && privacyModal.classList.contains('modal--open')) closePrivacyModal();
+    });
+
+    /* ===== Квиз ===== */
+    (function initQuiz() {
+      const steps = [...document.querySelectorAll('.quiz__step')];
+      const progress = document.getElementById('quizProgress');
+      const prevBtn = document.getElementById('quizPrev');
+      const nextBtn = document.getElementById('quizNext');
+      const nav = document.getElementById('quizNav');
+      const result = document.getElementById('quizResult');
+      const answers = {};
+      let currentStep = 0;
+      const stepFields = ['type', 'goal', 'budget', 'deadline'];
+
+      const quizResults = {
+        landing: { label: 'Лендинг', price: 'от 15 000 ₽ · 3–7 дней', text: 'Отличный выбор для быстрого старта продаж и сбора заявок' },
+        corporate: { label: 'Корпоративный сайт', price: 'от 30 000 ₽ · 1–2 недели', text: 'Подойдёт для представления компании и услуг в интернете' },
+        shop: { label: 'Интернет-магазин', price: 'от 50 000 ₽ · 2–4 недели', text: 'Полноценная площадка для онлайн-продаж с каталогом и оплатой' },
+        mobile: { label: 'Мобильное приложение', price: 'от 80 000 ₽ · 3–6 недель', text: 'Нативное или кроссплатформенное приложение для iOS и Android' },
+        webapp: { label: 'Веб-приложение', price: 'от 60 000 ₽ · 2–5 недель', text: 'CRM, портал или сервис с личным кабинетом и базой данных' },
+        custom: { label: 'Индивидуальный проект', price: 'по договорённости', text: 'Обсудим задачу лично и подберём оптимальное решение' }
+      };
+
+      function resolveProjectType() {
+        const type = answers.type;
+        const budget = answers.budget;
+        if (type === 'mobile') return 'mobile';
+        if (type === 'shop') return 'shop';
+        if (type === 'custom') {
+          if (budget === 'high') return 'mobile';
+          if (budget === 'mid') return 'shop';
+          return 'corporate';
+        }
+        if (type === 'landing') return 'landing';
+        if (budget === 'high') return 'webapp';
+        if (budget === 'mid') return 'corporate';
+        return 'landing';
+      }
+
+      function updateUI() {
+        steps.forEach((step, i) => step.classList.toggle('quiz__step--active', i === currentStep));
+        progress.style.width = ((currentStep + 1) / steps.length * 100) + '%';
+        prevBtn.disabled = currentStep === 0;
+        nextBtn.disabled = !answers[stepFields[currentStep]];
+        nextBtn.innerHTML = currentStep === steps.length - 1
+          ? 'Результат <i class="fas fa-check"></i>'
+          : 'Далее <i class="fas fa-arrow-right"></i>';
+        nav.hidden = false;
+        result.classList.remove('quiz__result--visible');
+      }
+
+      document.querySelectorAll('.quiz__option').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const field = btn.dataset.quiz;
+          answers[field] = btn.dataset.value;
+
+          btn.closest('.quiz__options').querySelectorAll('.quiz__option').forEach(o => {
+            o.classList.toggle('quiz__option--selected', o === btn);
+          });
+
+          nextBtn.disabled = false;
+        });
+      });
+
+      prevBtn.addEventListener('click', () => {
+        if (currentStep > 0) {
+          currentStep--;
+          updateUI();
+        }
+      });
+
+      nextBtn.addEventListener('click', () => {
+        if (currentStep < steps.length - 1) {
+          currentStep++;
+          updateUI();
+        } else {
+          showResult();
+        }
+      });
+
+      function showResult() {
+        const projectKey = resolveProjectType();
+        const data = quizResults[projectKey];
+        const cfg = window.__WS_INTEGRATIONS__ || {};
+        const recommendation = { label: data.label, price: data.price };
+
+        document.getElementById('quizResultType').textContent = data.label;
+        document.getElementById('quizResultPrice').textContent = data.price;
+        document.getElementById('quizResultText').textContent = data.text;
+
+        const summary = 'Квиз: ' + data.label + ' (' + data.price + ')';
+        pendingContactContext = summary;
+
+        const visitorText = TelegramBot.buildVisitorMessage('quiz', data);
+        document.getElementById('quizTelegramBtn').href = TelegramBot.getDeepLink(cfg.telegramUser, visitorText);
+
+        document.getElementById('quizContactBtn').onclick = () => {
+          const msg = document.getElementById('contactMessage');
+          if (msg) {
+            msg.value =
+              'Здравствуйте! Прошёл квиз на сайте.\n' +
+              'Рекомендация: ' + data.label + ' (' + data.price + ').\n\n';
+          }
+        };
+
+        const notice = document.getElementById('quizResultNotice');
+        notice.hidden = true;
+
+        if (TelegramBot.isConfigured()) {
+          TelegramBot.notifyQuiz({ ...answers }, recommendation).then(result => {
+            if (result.ok && !result.duplicate) {
+              notice.textContent = '✓ Ответы квиза отправлены — скоро свяжусь с вами';
+              notice.hidden = false;
+            }
+          });
+        }
+
+        steps.forEach(s => s.classList.remove('quiz__step--active'));
+        nav.hidden = true;
+        result.classList.add('quiz__result--visible');
+        progress.style.width = '100%';
+      }
+
+      updateUI();
+    })();
+  </script>
+</body>
+</html>
